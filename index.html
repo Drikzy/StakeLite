@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StakeLite - Web</title>
+    <!-- On relie le fichier CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- On relie les fichiers JavaScript (defer permet d'attendre que la page charge) -->
+    <script src="main.js" defer></script>
+    <script src="mines.js" defer></script>
+    <script src="blackjack.js" defer></script>
+</head>
+<body>
+
+    <!-- HEADER COMMUN -->
+    <header>
+        <div class="logo">STAKE<span>LITE</span></div>
+        <div class="balance-box"><span id="global-balance">10000.00</span> GC</div>
+    </header>
+
+    <!-- NAVIGATION -->
+    <nav class="tabs">
+        <button class="tab-btn active" onclick="switchTab('mines', this)">Mines</button>
+        <button class="tab-btn" onclick="switchTab('blackjack', this)">Blackjack</button>
+    </nav>
+
+    <main>
+        <!-- =========================================
+             SECTION: MINES
+             ========================================= -->
+        <section id="mines-section" class="game-section active">
+            <div class="grid-container" id="mines-grid">
+                <!-- Les cases sont générées par mines.js -->
+            </div>
+
+            <div class="controls">
+                <label>Mise</label>
+                <input type="number" id="mines-bet" value="100">
+                
+                <label>Mines: <span id="mines-count-display">3</span></label>
+                <div class="mines-row">
+                    <button class="m-btn" onclick="selectMines(1, this)">1</button>
+                    <button class="m-btn active" onclick="selectMines(3, this)">3</button>
+                    <button class="m-btn" onclick="selectMines(5, this)">5</button>
+                    <button class="m-btn" onclick="selectMines(10, this)">10</button>
+                    <button class="m-btn" onclick="selectMines(24, this)">24</button>
+                </div>
+
+                <button id="mines-action-btn" class="main-btn green" onclick="handleMinesAction()">JOUER</button>
+            </div>
+        </section>
+
+        <!-- =========================================
+             SECTION: BLACKJACK
+             ========================================= -->
+        <section id="blackjack-section" class="game-section">
+            <div class="bj-area">
+                <!-- Croupier -->
+                <div class="hand-section">
+                    <div class="score-bubble" id="dealer-score" style="display: none;">?</div>
+                    <div class="hand-container" id="dealer-hand"></div>
+                </div>
+
+                <!-- Message Central -->
+                <div class="message-area" id="bj-message">Blackjack pays 3 to 2</div>
+
+                <!-- Joueur -->
+                <div class="hand-section">
+                    <div class="score-bubble" id="player-score" style="display: none;">0</div>
+                    <div class="hand-container" id="player-hand"></div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <!-- Interface de Mise -->
+                <div id="bj-bet-ui">
+                    <label>Bet Amount</label>
+                    <div class="bet-row">
+                        <input type="number" id="bj-bet" value="100">
+                        <button class="mod-btn" onclick="modBjBet(0.5)">½</button>
+                        <button class="mod-btn" onclick="modBjBet(2)">2×</button>
+                        <button class="main-btn green" style="width: auto; padding: 0 25px;" onclick="startBlackjack()">Bet</button>
+                    </div>
+                </div>
+
+                <!-- Interface de Jeu -->
+                <div id="bj-play-ui" class="actions-grid" style="display: none;">
+                    <button class="action-btn" id="btn-hit" onclick="bjHit()">Hit</button>
+                    <button class="action-btn" id="btn-stand" onclick="bjStand()">Stand</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>
