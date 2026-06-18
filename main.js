@@ -3,7 +3,14 @@ const supabaseKey = 'sb_publishable_oTAvDkJ0NLEm5ccJ-1LrYA_ab_Eg4_q';
 
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 let balance = 0;
-const monPseudo = "Flo";
+let monPseudo = localStorage.getItem("stakelite_pseudo");
+if (!monPseudo) {
+    monPseudo = prompt("Bienvenue sur StakeLite ! Quel est ton pseudo ?");
+    while (!monPseudo || monPseudo.trim() === "") {
+        monPseudo = prompt("Tu dois entrer un pseudo pour jouer ! Quel est ton pseudo ?");
+    }
+    localStorage.setItem("stakelite_pseudo", monPseudo.trim());
+}
 
 async function initPlayer() {
     console.log("Connexion à la base de données Supabase...");
