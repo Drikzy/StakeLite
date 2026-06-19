@@ -1,10 +1,6 @@
-// =========================================
-// 1. CONFIGURATION DE SUPABASE
-// =========================================
-const supabaseUrl = 'https://hiusxytfgberekcwwszr.supabase.co'; // ⚠️ À REMPLACER
-const supabaseKey = 'sb_publishable_oTAvDkJ0NLEm5ccJ-1LrYA_ab_Eg4_q'; // ⚠️ À REMPLACER
-
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+const supabaseUrl = 'https://hiusxytfgberekcwwszr.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpdXN4eXRmZ2JlcmVrY3d3c3pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3NjUyMzksImV4cCI6MjA5NzM0MTIzOX0.MP9Us-b5OFwzz-2mxc3nfExnX1_107Dejd1Tj3CfciQ';
+const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 // =========================================
 // 2. GESTION DU JOUEUR & DE LA BANQUE
@@ -14,10 +10,8 @@ let monPseudo = localStorage.getItem("stakelite_pseudo");
 
 // Vérification au lancement
 if (!monPseudo) {
-    // Joueur inconnu : on affiche l'écran d'accueil
     document.getElementById('login-overlay').classList.add('active');
 } else {
-    // Joueur connu : on charge ses données direct
     initPlayer();
 }
 
@@ -41,7 +35,8 @@ function login() {
 async function initPlayer() {
     console.log("Connexion pour :", monPseudo);
     
-    let { data, error } = await supabase
+    // 🔴 On utilise 'client' ici
+    let { data, error } = await client
         .from('joueurs')
         .select('solde')
         .eq('pseudo', monPseudo)
@@ -51,7 +46,7 @@ async function initPlayer() {
         balance = data.solde;
     } else {
         balance = 10000;
-        await supabase
+        await client
             .from('joueurs')
             .insert([{ pseudo: monPseudo, solde: balance }]);
     }
@@ -64,7 +59,8 @@ async function updateBalance(amount) {
     balance += amount;
     document.getElementById('global-balance').innerText = balance.toFixed(2);
 
-    const { error } = await supabase
+    // 🔴 Et on utilise 'client' ici aussi
+    const { error } = await client
         .from('joueurs')
         .update({ solde: balance })
         .eq('pseudo', monPseudo);
