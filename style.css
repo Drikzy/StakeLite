@@ -130,6 +130,61 @@ header {
 }
 
 /* =========================================
+   PAGE D'ACCUEIL & CARTES JEUX
+   ========================================= */
+.games-grid {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap; /* Permet de passer à la ligne sur petit écran */
+}
+
+.game-card {
+    background-color: var(--bg-panel);
+    border: 2px solid var(--bg-cell);
+    border-radius: 12px;
+    padding: 30px 20px;
+    width: 280px;
+    text-align: center;
+    text-decoration: none;
+    color: var(--text-main);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.game-card:hover {
+    transform: translateY(-8px); /* Fait léviter la carte */
+    border-color: var(--accent);
+    box-shadow: 0 10px 20px rgba(0, 231, 1, 0.1); /* Léger halo vert */
+}
+
+.game-icon {
+    font-size: 50px;
+    background-color: var(--bg-main);
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.game-info h3 {
+    font-size: 22px;
+    margin-bottom: 8px;
+}
+
+.game-info p {
+    font-size: 14px;
+    color: var(--text-sec);
+    line-height: 1.4;
+}
+
+/* =========================================
         NAVIGATION & LAYOUT PRINCIPAL
    ========================================= */
 .tabs {

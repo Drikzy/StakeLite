@@ -132,16 +132,6 @@ async function updateBalance(amount) {
     document.getElementById('global-balance').innerText = balance.toFixed(2);
 }
 
-function switchTab(game, btnElement) {
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    btnElement.classList.add('active');
-
-    document.getElementById('mines-section').classList.remove('active');
-    document.getElementById('blackjack-section').classList.remove('active');
-    
-    document.getElementById(`${game}-section`).classList.add('active');
-}
-
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }

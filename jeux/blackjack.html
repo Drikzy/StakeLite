@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StakeLite - Blackjack</title>
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <link rel="stylesheet" href="../style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../main.js" defer></script>
+    <script src="blackjack.js" defer></script>
+</head>
+<body>
+    <header>
+        <a href="../index.html" class="logo" style="text-decoration: none; color: var(--text-main);">STAKE<span>LITE</span></a>
+        <div class="header-right">
+            <div class="balance-box"><span id="global-balance">0.00</span> GC</div>
+            <div class="user-menu">
+                <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
+                <div class="dropdown" id="user-dropdown">
+                    <a href="../profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
+                        <div id="dropdown-pseudo" style="margin-bottom: 5px;">Joueur</div>
+                    </a>
+                    <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main style="align-items: center; padding-top: 30px;">
+        <section id="blackjack-section" class="game-section active">
+            <div class="controls">
+                <div class="bj-area">
+                    <div class="hand-section" id="dealer-area">
+                        <div class="score-bubble" id="dealer-score">Croupier : ?</div>
+                        <div class="hand-container" id="dealer-hand"></div>
+                    </div>
+                    
+                    <div class="message-area" id="bj-message">Place ta mise pour jouer</div>
+                    
+                    <div class="hand-section" id="player-area">
+                        <div class="hand-container" id="player-hand"></div>
+                        <div class="score-bubble" id="player-score" style="margin-top:10px; margin-bottom:0;">Toi : 0</div>
+                    </div>
+                </div>
+
+                <div id="bj-bet-controls">
+                    <label>Montant de la mise</label>
+                    <div class="bet-row">
+                        <input type="number" id="bj-bet" value="100" min="1">
+                        <button class="mod-btn" onclick="modifyBet(0.5)">1/2</button>
+                        <button class="mod-btn" onclick="modifyBet(2)">x2</button>
+                    </div>
+                    <button class="main-btn green" style="margin-top: 15px;" id="bj-play-btn" onclick="startBlackjack()">DISTRIBUER</button>
+                </div>
+
+                <div class="actions-grid" id="bj-action-controls" style="display: none; margin-top: 15px;">
+                    <button class="action-btn" style="background-color: #213743;" onclick="hit()">TIRER</button>
+                    <button class="action-btn" style="background-color: var(--accent); color: black;" onclick="stand()">RESTER</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="login-overlay" class="overlay">
+        <div class="login-box">
+            <h2 id="auth-title">Connexion à StakeLite</h2>
+            <div class="auth-form">
+                <div id="pseudo-group" class="input-group" style="display: none;">
+                    <label>Pseudo</label>
+                    <input type="text" id="auth-pseudo" placeholder="Ex: Flo...">
+                </div>
+                <div class="input-group">
+                    <label>Adresse Email</label>
+                    <input type="email" id="auth-email" placeholder="exemple@mail.com">
+                </div>
+                <div class="input-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="auth-password" placeholder="••••••••">
+                </div>
+                <button id="auth-main-btn" class="main-btn green" onclick="handleAuth()">SE CONNECTER</button>
+            </div>
+            <p class="auth-switch">
+                <span id="auth-switch-text">Pas encore de compte ?</span> 
+                <a href="#" id="auth-switch-link" onclick="toggleAuthMode(event)">S'inscrire</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -7,7 +7,7 @@ let dHand = [];
 let isBjPlaying = false;
 
 // Boutons rapides de mise (1/2 et x2)
-function modBjBet(multiplier) {
+function modifyBet(multiplier) {
     if(isBjPlaying) return;
     let input = document.getElementById('bj-bet');
     let val = parseFloat(input.value);
@@ -56,22 +56,25 @@ function updateBjUI(hideDealerCard = true) {
     dHand.forEach((c, i) => dContainer.appendChild(renderCard(c, hideDealerCard && i === 1)));
 
     // Score Joueur
-    document.getElementById('player-score').innerText = getScore(pHand);
-    document.getElementById('player-score').style.display = 'block';
+    document.getElementById('player-score').innerText = `Toi : ${getScore(pHand)}`;
 
     // Score Croupier
     if (hideDealerCard) {
-        document.getElementById('dealer-score').innerText = '?';
+        document.getElementById('dealer-score').innerText = 'Croupier : ?';
     } else {
-        document.getElementById('dealer-score').innerText = getScore(dHand);
+        document.getElementById('dealer-score').innerText = `Croupier : ${getScore(dHand)}`;
     }
-    document.getElementById('dealer-score').style.display = 'block';
 }
 
 function setBjMessage(msg, color = 'var(--text-sec)') {
     let msgEl = document.getElementById('bj-message');
     msgEl.innerText = msg;
     msgEl.style.color = color;
+}
+
+// Fonction pour bloquer/débloquer les boutons d'action
+function toggleActionBtns(disabled) {
+    document.querySelectorAll('.action-btn').forEach(btn => btn.disabled = disabled);
 }
 
 async function startBlackjack() {
@@ -81,27 +84,25 @@ async function startBlackjack() {
     updateBalance(-bet);
     isBjPlaying = true;
     
-    // Changement d'interface (Bet -> Hit/Stand)
-    document.getElementById('bj-bet-ui').style.display = 'none';
-    document.getElementById('bj-play-ui').style.display = 'flex';
-    document.getElementById('btn-hit').disabled = true;
-    document.getElementById('btn-stand').disabled = true;
+    // Changement d'interface : on utilise les NOUVEAUX ID
+    document.getElementById('bj-bet-controls').style.display = 'none';
+    document.getElementById('bj-action-controls').style.display = 'flex';
+    toggleActionBtns(true); // On désactive pendant la distribution
     
-    setBjMessage("Dealing...");
+    setBjMessage("Distribution...");
 
     deck = getDeck();
     pHand = []; 
     dHand = [];
     
-    // Distribution fluide avec Async/Await (sleep vient de main.js)
+    // Distribution fluide avec Async/Await
     pHand.push(deck.pop()); updateBjUI(); await sleep(500);
     dHand.push(deck.pop()); updateBjUI(); await sleep(500);
     pHand.push(deck.pop()); updateBjUI(); await sleep(500);
     dHand.push(deck.pop()); updateBjUI(); await sleep(500);
 
-    document.getElementById('btn-hit').disabled = false;
-    document.getElementById('btn-stand').disabled = false;
-    setBjMessage("Hit or Stand?");
+    toggleActionBtns(false); // On réactive les boutons
+    setBjMessage("Tirer ou Rester ?");
 
     // Blackjack Naturel
     if (getScore(pHand) === 21) {
@@ -109,7 +110,7 @@ async function startBlackjack() {
     }
 }
 
-function bjHit() {
+function hit() {
     pHand.push(deck.pop());
     updateBjUI();
     
@@ -117,13 +118,12 @@ function bjHit() {
     if (score > 21) {
         setTimeout(() => endBlackjack("Bust ! Perdu.", 0, 'var(--red)'), 500);
     } else if (score === 21) {
-        setTimeout(() => bjStand(), 500); // Auto Stand si on a 21
+        setTimeout(() => stand(), 500); // Auto Stand si on a 21
     }
 }
 
-async function bjStand() {
-    document.getElementById('btn-hit').disabled = true;
-    document.getElementById('btn-stand').disabled = true;
+async function stand() {
+    toggleActionBtns(true);
     
     // On révèle la carte cachée du croupier
     updateBjUI(false); 
@@ -155,8 +155,8 @@ function endBlackjack(msg, winAmount, color) {
     
     isBjPlaying = false;
     
-    // On remet l'interface de mise
-    document.getElementById('bj-play-ui').style.display = 'none';
-    document.getElementById('bj-bet-ui').style.display = 'block';
+    // On remet l'interface de mise avec les NOUVEAUX ID
+    document.getElementById('bj-action-controls').style.display = 'none';
+    document.getElementById('bj-bet-controls').style.display = 'block';
     updateBjUI(false); 
 }

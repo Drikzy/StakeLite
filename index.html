@@ -9,8 +9,6 @@
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="main.js" defer></script>
-    <script src="mines.js" defer></script>
-    <script src="blackjack.js" defer></script>
 </head>
 <body>
     <div id="login-overlay" class="overlay active">
@@ -61,79 +59,37 @@
             </div>
         </div>
     </header>
+    <main style="flex-direction: column; align-items: center; padding: 50px 20px;">
+        
+        <div style="text-align: center; margin-bottom: 50px;">
+            <h1 style="font-size: 40px; margin-bottom: 10px; font-weight: 900;">Bienvenue sur STAKE<span style="color: var(--accent);">LITE</span></h1>
+            <p style="color: var(--text-sec); font-size: 18px;">Gagne de l'argent sans jamais en mettre en jeu</p>
+        </div>
 
-    <!-- NAVIGATION -->
-    <nav class="tabs">
-        <button class="tab-btn active" onclick="switchTab('mines', this)">Mines</button>
-        <button class="tab-btn" onclick="switchTab('blackjack', this)">Blackjack</button>
-    </nav>
-
-    <main>
-        <!-- =========================================
-             SECTION: MINES
-             ========================================= -->
-        <section id="mines-section" class="game-section active">
-            <div class="grid-container" id="mines-grid">
-                <!-- Les cases sont générées par mines.js -->
-            </div>
-
-            <div class="controls">
-                <label>Mise</label>
-                <input type="number" id="mines-bet" value="100">
+        <div style="width: 100%; max-width: 800px;">
+            <h2 style="color: var(--text-sec); text-transform: uppercase; font-size: 14px; margin-bottom: 20px; letter-spacing: 1px;">Nos Jeux</h2>
+            
+            <div class="games-grid">
                 
-                <label>Mines: <span id="mines-count-display">3</span></label>
-                <div class="mines-row">
-                    <button class="m-btn" onclick="selectMines(1, this)">1</button>
-                    <button class="m-btn active" onclick="selectMines(3, this)">3</button>
-                    <button class="m-btn" onclick="selectMines(5, this)">5</button>
-                    <button class="m-btn" onclick="selectMines(10, this)">10</button>
-                    <button class="m-btn" onclick="selectMines(24, this)">24</button>
-                </div>
-
-                <button id="mines-action-btn" class="main-btn green" onclick="handleMinesAction()">JOUER</button>
-            </div>
-        </section>
-
-        <!-- =========================================
-             SECTION: BLACKJACK
-             ========================================= -->
-        <section id="blackjack-section" class="game-section">
-            <div class="bj-area">
-                <!-- Croupier -->
-                <div class="hand-section">
-                    <div class="score-bubble" id="dealer-score" style="display: none;">?</div>
-                    <div class="hand-container" id="dealer-hand"></div>
-                </div>
-
-                <!-- Message Central -->
-                <div class="message-area" id="bj-message">Blackjack pays 3 to 2</div>
-
-                <!-- Joueur -->
-                <div class="hand-section">
-                    <div class="score-bubble" id="player-score" style="display: none;">0</div>
-                    <div class="hand-container" id="player-hand"></div>
-                </div>
-            </div>
-
-            <div class="controls">
-                <!-- Interface de Mise -->
-                <div id="bj-bet-ui">
-                    <label>Bet Amount</label>
-                    <div class="bet-row">
-                        <input type="number" id="bj-bet" value="100">
-                        <button class="mod-btn" onclick="modBjBet(0.5)">½</button>
-                        <button class="mod-btn" onclick="modBjBet(2)">2×</button>
-                        <button class="main-btn green" style="width: auto; padding: 0 25px;" onclick="startBlackjack()">Bet</button>
+                <a href="jeux/mines.html" class="game-card">
+                    <div class="game-icon">💣</div>
+                    <div class="game-info">
+                        <h3>Mines</h3>
+                        <p>Trouve les diamants, évite les bombes et encaisse avant l'explosion !</p>
                     </div>
-                </div>
+                </a>
 
-                <!-- Interface de Jeu -->
-                <div id="bj-play-ui" class="actions-grid" style="display: none;">
-                    <button class="action-btn" id="btn-hit" onclick="bjHit()">Hit</button>
-                    <button class="action-btn" id="btn-stand" onclick="bjStand()">Stand</button>
-                </div>
+                <a href="jeux/blackjack.html" class="game-card">
+                    <div class="game-icon">🃏</div>
+                    <div class="game-info">
+                        <h3>Blackjack</h3>
+                        <p>Défie le croupier et tente de te rapprocher de 21 sans le dépasser.</p>
+                    </div>
+                </a>
+
             </div>
-        </section>
+        </div>
+
     </main>
 </body>
 </html>
