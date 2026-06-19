@@ -113,6 +113,8 @@ async function initPlayer() {
         balance = data[0].solde;
         document.getElementById('global-balance').innerText = balance.toFixed(2);
     }
+    document.getElementById('user-avatar').innerText = monPseudo.charAt(0);
+    document.getElementById('dropdown-pseudo').innerText = monPseudo;
 }
 
 async function updateBalance(amount) {
@@ -145,3 +147,13 @@ function sleep(ms) {
 }
 
 checkSession();
+
+// Affiche ou cache le menu déroulant
+function toggleUserMenu() {
+    document.getElementById('user-dropdown').classList.toggle('active');
+}
+
+async function logout() {
+    await client.auth.signOut();
+    location.reload();
+}
