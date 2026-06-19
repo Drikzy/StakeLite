@@ -13,12 +13,33 @@
     <script src="blackjack.js" defer></script>
 </head>
 <body>
-    <div id="login-overlay" class="overlay">
+    <div id="login-overlay" class="overlay active">
         <div class="login-box">
-            <h2>Bienvenue sur StakeLite</h2>
-            <label>Choisis ton pseudo :</label>
-            <input type="text" id="pseudo-input" placeholder="Ex: Drikzy...">
-            <button class="main-btn green" onclick="login()">ENTRER</button>
+            <h2 id="auth-title">Connexion à StakeLite</h2>
+            
+            <div class="auth-form">
+                <div id="pseudo-group" class="input-group" style="display: none;">
+                    <label>Pseudo</label>
+                    <input type="text" id="auth-pseudo" placeholder="Ex: Flo...">
+                </div>
+
+                <div class="input-group">
+                    <label>Adresse Email</label>
+                    <input type="email" id="auth-email" placeholder="exemple@mail.com">
+                </div>
+
+                <div class="input-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="auth-password" placeholder="••••••••">
+                </div>
+
+                <button id="auth-main-btn" class="main-btn green" onclick="handleAuth()">SE CONNECTER</button>
+            </div>
+
+            <p class="auth-switch">
+                <span id="auth-switch-text">Pas encore de compte ?</span> 
+                <a href="#" id="auth-switch-link" onclick="toggleAuthMode(event)">S'inscrire</a>
+            </p>
         </div>
     </div>
     <header>
