@@ -93,9 +93,7 @@ input { background-color: var(--bg-main); border: 1px solid var(--bg-cell); colo
     to { transform: translateY(0); opacity: 1; }
 }
 
-/* =========================================
-   ÉCRAN DE CONNEXION
-   ========================================= */
+/* ÉCRAN DE CONNEXION */
 .overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;

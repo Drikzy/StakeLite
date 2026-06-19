@@ -39,31 +39,32 @@ async function initPlayer() {
         .eq('pseudo', monPseudo);
 
     if (selectError) {
-        console.error("❌ Erreur lors de la RECHERCHE du joueur :", selectError.message, selectError);
-        alert("Erreur de connexion à la base de données (voir console F12)");
+        console.error("Erreur lors de la RECHERCHE du joueur :", selectError.message, selectError);
+        alert("Erreur de connexion à la base de données");
         return;
     }
 
     // Si le joueur existe déjà
     if (data && data.length > 0) {
         balance = data[0].solde;
-        console.log("✅ Joueur trouvé ! Solde chargé depuis Supabase :", balance);
-    } 
+        console.log("Joueur trouvé ! Solde chargé depuis Supabase :", balance);
+    }
     // Si le joueur n'existe pas encore
     else {
-        balance = 10000;
-        console.log("Joueur inconnu dans Supabase. Création de la ligne en cours...");
-        
-        let { error: insertError } = await client
+        console.log("Joueur inconnu.");
+        let { data: newPlayer, error: insertError } = await client
             .from('Joueurs')
-            .insert([{ pseudo: monPseudo, solde: balance }]);
+            .insert([{ pseudo: monPseudo }])
+            .select();
 
         if (insertError) {
-            console.error("❌ Erreur critique lors de l'INSERTION du joueur :", insertError.message, insertError);
-            alert("Impossible de créer ton profil dans Supabase : " + insertError.message);
+            console.error("❌ Erreur d'insertion :", insertError.message);
+            alert("Erreur de création du profil");
             return;
-        } else {
-            console.log("🎉 Nouvelle ligne créée avec succès dans Supabase !");
+        }
+        if (newPlayer && newPlayer.length > 0) {
+            balance = newPlayer[0].solde;
+            console.log("Compte créé !");
         }
     }
     
@@ -77,7 +78,7 @@ async function updateBalance(amount) {
     });
         
     if (error) {
-        console.error("❌ Erreur de transaction :", error.message);
+        console.error("Erreur de transaction :", error.message);
         return;
     }
     balance = data;
