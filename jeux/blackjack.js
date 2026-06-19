@@ -1,12 +1,6 @@
-const SUITS = ['♠', '♣', '♥', '♦'];
-const VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-
-let deck = [];
-let pHand = [];
-let dHand = [];
 let isBjPlaying = false;
+let currentBjId = null;
 
-// Boutons rapides de mise (1/2 et x2)
 function modifyBet(multiplier) {
     if(isBjPlaying) return;
     let input = document.getElementById('bj-bet');
@@ -14,22 +8,33 @@ function modifyBet(multiplier) {
     input.value = Math.floor(val * multiplier);
 }
 
-function getDeck() {
-    let d = [];
-    for (let s of SUITS) {
-        for (let v of VALUES) { d.push({ value: v, suit: s }); }
+async function syncBalance() {
+    const { data } = await client.from('Joueurs').select('solde').eq('pseudo', monPseudo).single();
+    if (data) {
+        balance = data.solde;
+        document.getElementById('global-balance').innerText = balance.toFixed(2);
     }
-    return d.sort(() => Math.random() - 0.5);
 }
 
-function getScore(hand) {
-    let score = 0, aces = 0;
-    for (let c of hand) {
-        if (c.value === 'A') { aces++; score += 11; }
-        else if (['J', 'Q', 'K'].includes(c.value)) score += 10;
-        else score += parseInt(c.value);
+// 🧮 NOUVELLE FONCTION : Calculer le score pour l'affichage visuel
+function calculateScore(hand) {
+    let score = 0;
+    let aces = 0;
+    hand.forEach(card => {
+        let val = card.value;
+        if (val === 'A') { 
+            aces += 1; 
+            score += 11; 
+        } else if (['J', 'Q', 'K'].includes(val)) { 
+            score += 10; 
+        } else { 
+            score += parseInt(val); 
+        }
+    });
+    while (score > 21 && aces > 0) { 
+        score -= 10; 
+        aces -= 1; 
     }
-    while (score > 21 && aces > 0) { score -= 10; aces--; }
     return score;
 }
 
@@ -45,25 +50,24 @@ function renderCard(card, isHidden = false) {
     return div;
 }
 
-function updateBjUI(hideDealerCard = true) {
+function parseCards(dataArray) {
+    if (!dataArray) return [];
+    if (typeof dataArray === 'string') {
+        try { return JSON.parse(dataArray); } catch(e) { return []; }
+    }
+    return Array.isArray(dataArray) ? dataArray : [];
+}
+
+function updateHandsUI(pHand, dHand, hideDealerCard = true) {
+    pHand = parseCards(pHand);
+    dHand = parseCards(dHand);
+
     let pContainer = document.getElementById('player-hand');
     let dContainer = document.getElementById('dealer-hand');
-    
-    pContainer.innerHTML = ''; 
-    dContainer.innerHTML = '';
+    pContainer.innerHTML = ''; dContainer.innerHTML = '';
 
     pHand.forEach(c => pContainer.appendChild(renderCard(c)));
     dHand.forEach((c, i) => dContainer.appendChild(renderCard(c, hideDealerCard && i === 1)));
-
-    // Score Joueur
-    document.getElementById('player-score').innerText = `Toi : ${getScore(pHand)}`;
-
-    // Score Croupier
-    if (hideDealerCard) {
-        document.getElementById('dealer-score').innerText = 'Croupier : ?';
-    } else {
-        document.getElementById('dealer-score').innerText = `Croupier : ${getScore(dHand)}`;
-    }
 }
 
 function setBjMessage(msg, color = 'var(--text-sec)') {
@@ -72,91 +76,114 @@ function setBjMessage(msg, color = 'var(--text-sec)') {
     msgEl.style.color = color;
 }
 
-// Fonction pour bloquer/débloquer les boutons d'action
 function toggleActionBtns(disabled) {
     document.querySelectorAll('.action-btn').forEach(btn => btn.disabled = disabled);
 }
 
+// =========================================
+// 1. DISTRIBUER
+// =========================================
 async function startBlackjack() {
     let bet = parseFloat(document.getElementById('bj-bet').value);
     if (isNaN(bet) || bet <= 0 || bet > balance) return alert("Mise invalide ou solde insuffisant");
-    
-    updateBalance(-bet);
+
     isBjPlaying = true;
-    
-    // Changement d'interface : on utilise les NOUVEAUX ID
     document.getElementById('bj-bet-controls').style.display = 'none';
     document.getElementById('bj-action-controls').style.display = 'flex';
-    toggleActionBtns(true); // On désactive pendant la distribution
-    
+    toggleActionBtns(true);
     setBjMessage("Distribution...");
 
-    deck = getDeck();
-    pHand = []; 
-    dHand = [];
+    const { data, error } = await client.rpc('bj_demarrer', { p_pseudo: monPseudo, p_mise: bet });
     
-    // Distribution fluide avec Async/Await
-    pHand.push(deck.pop()); updateBjUI(); await sleep(500);
-    dHand.push(deck.pop()); updateBjUI(); await sleep(500);
-    pHand.push(deck.pop()); updateBjUI(); await sleep(500);
-    dHand.push(deck.pop()); updateBjUI(); await sleep(500);
+    if (error) {
+        alert("Erreur de transaction !");
+        isBjPlaying = false;
+        return;
+    }
 
-    toggleActionBtns(false); // On réactive les boutons
+    currentBjId = data.id;
+    
+    let pHandSafe = parseCards(data.main_joueur);
+    let dHandSafe = parseCards(data.main_croupier);
+    
+    updateHandsUI(pHandSafe, dHandSafe, true);
+    
+    // 🧮 AFFICHAGE DES SCORES AU LANCEMENT
+    document.getElementById('player-score').innerText = `Toi : ${calculateScore(pHandSafe)}`;
+    document.getElementById('dealer-score').innerText = `Croupier : ${calculateScore([dHandSafe[0]])}`;
+    
+    syncBalance(); 
+    toggleActionBtns(false);
     setBjMessage("Tirer ou Rester ?");
-
-    // Blackjack Naturel
-    if (getScore(pHand) === 21) {
-        endBlackjack("Blackjack !", bet * 2.5, 'var(--accent)');
-    }
 }
 
-function hit() {
-    pHand.push(deck.pop());
-    updateBjUI();
-    
-    let score = getScore(pHand);
-    if (score > 21) {
-        setTimeout(() => endBlackjack("Bust ! Perdu.", 0, 'var(--red)'), 500);
-    } else if (score === 21) {
-        setTimeout(() => stand(), 500); // Auto Stand si on a 21
-    }
-}
-
-async function stand() {
+// =========================================
+// 2. TIRER
+// =========================================
+async function hit() {
+    if (!currentBjId) return;
     toggleActionBtns(true);
-    
-    // On révèle la carte cachée du croupier
-    updateBjUI(false); 
-    
-    // Le croupier tire jusqu'à avoir au moins 17
-    while (getScore(dHand) < 17) {
-        await sleep(1000);
-        dHand.push(deck.pop());
-        updateBjUI(false);
-    }
 
-    let pScore = getScore(pHand);
-    let dScore = getScore(dHand);
-    let bet = parseFloat(document.getElementById('bj-bet').value);
+    const { data, error } = await client.rpc('bj_hit', { p_id: currentBjId });
+    if (error || data.status === 'erreur') { toggleActionBtns(false); return; }
 
-    // Résultat
-    if (dScore > 21 || pScore > dScore) {
-        endBlackjack("Gagné !", bet * 2, 'var(--accent)');
-    } else if (pScore < dScore) {
-        endBlackjack("Perdu...", 0, 'var(--red)');
+    let pHandSafe = parseCards(data.main_joueur);
+    let pContainer = document.getElementById('player-hand');
+    pContainer.innerHTML = '';
+    pHandSafe.forEach(c => pContainer.appendChild(renderCard(c)));
+    
+    // 🧮 MISE À JOUR DU SCORE DU JOUEUR
+    document.getElementById('player-score').innerText = `Toi : ${calculateScore(pHandSafe)}`;
+
+    if (data.status === 'perdu') {
+        endBlackjack("Bust ! Perdu.", 0, 'var(--red)', null, pHandSafe);
     } else {
-        endBlackjack("Égalité (Push)", bet, 'var(--text-sec)');
+        toggleActionBtns(false);
     }
 }
 
-function endBlackjack(msg, winAmount, color) {
+// =========================================
+// 3. RESTER
+// =========================================
+async function stand() {
+    if (!currentBjId) return;
+    toggleActionBtns(true);
+    setBjMessage("Le croupier joue...");
+
+    const { data, error } = await client.rpc('bj_stand', { p_id: currentBjId });
+    if (error || data.status === 'erreur') { toggleActionBtns(false); return; }
+
+    let msg = "";
+    let color = "";
+    if (data.status === 'gagne') { msg = `Gagné ! +${data.gain.toFixed(2)} GC`; color = 'var(--accent)'; }
+    else if (data.status === 'perdu') { msg = "Perdu..."; color = 'var(--red)'; }
+    else { msg = "Égalité (Push)"; color = 'var(--text-sec)'; }
+
+    endBlackjack(msg, data.gain, color, data.main_croupier);
+}
+
+// =========================================
+// FIN DE PARTIE
+// =========================================
+function endBlackjack(msg, winAmount, color, dHandReveal = null, pHand = null) {
     setBjMessage(msg, color);
-    if (winAmount > 0) updateBalance(winAmount);
+    
+    if (dHandReveal) {
+        dHandReveal = parseCards(dHandReveal);
+        let dContainer = document.getElementById('dealer-hand');
+        dContainer.innerHTML = '';
+        dHandReveal.forEach(c => dContainer.appendChild(renderCard(c, false)));
+        
+        // 🧮 AFFICHAGE DU SCORE FINAL DU CROUPIER
+        document.getElementById('dealer-score').innerText = `Croupier : ${calculateScore(dHandReveal)}`;
+    }
     
     isBjPlaying = false;
-    
-    // On remet l'interface de mise avec les NOUVEAUX ID
-    document.getElementById('bj-action-controls').style.display = 'none';
-    document.getElementById('bj-bet-controls').style.display = 'block';
-    updateBjUI(false); 
+    currentBjId = null;
+    syncBalance();
+
+    setTimeout(() => {
+        document.getElementById('bj-action-controls').style.display = 'none';
+        document.getElementById('bj-bet-controls').style.display = 'block';
+    }, 2000);
 }

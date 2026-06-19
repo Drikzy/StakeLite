@@ -1,10 +1,9 @@
 const GRID_SIZE = 25;
-let minesCount = 1; // 1 par défaut
-let minesLocations = [];
+let minesCount = 1;
+let currentPartieId = null;
 let isMinesPlaying = false;
 let revealedCount = 0;
 
-// 1. CORRECTION ICI : L'ID est 'grid' tout court
 const gridContainer = document.getElementById('grid'); 
 for (let i = 0; i < GRID_SIZE; i++) {
     let cell = document.createElement('div');
@@ -14,111 +13,141 @@ for (let i = 0; i < GRID_SIZE; i++) {
     gridContainer.appendChild(cell);
 }
 
-// 2. CORRECTION ICI : Synchronisé avec le HTML (setMines)
 function setMines(num, btnElement) {
     if (isMinesPlaying) return;
     minesCount = num;
-    
     document.querySelectorAll('.m-btn').forEach(btn => btn.classList.remove('active'));
     btnElement.classList.add('active');
 }
 
-function calcMultiplier() {
+// Fonction utilitaire pour rafraîchir l'affichage depuis la vraie base
+async function syncBalance() {
+    const { data } = await client.from('Joueurs').select('solde').eq('pseudo', monPseudo).single();
+    if (data) {
+        balance = data.solde;
+        document.getElementById('global-balance').innerText = balance.toFixed(2);
+    }
+}
+
+// Calcul visuel du multiplicateur (juste pour le bouton)
+function calcMultiplierVisuel() {
     if (revealedCount === 0) return 1;
     let mult = 1;
     let safeCells = GRID_SIZE - minesCount;
     for (let i = 0; i < revealedCount; i++) {
         mult *= (GRID_SIZE - i) / (safeCells - i);
     }
-    return mult * 0.99; // Avantage de la maison (1%)
+    return mult * 0.99;
 }
 
-// 3. CORRECTION ICI : Bouton JOUER
+// =========================================
+// 1. DÉMARRER LA PARTIE
+// =========================================
 async function startGame() {
     if (isMinesPlaying) return;
-
     let bet = parseFloat(document.getElementById('bet-amount').value);
     if (isNaN(bet) || bet <= 0 || bet > balance) return alert("Mise invalide ou solde insuffisant");
-    
-    updateBalance(-bet);
-    document.getElementById('bet-amount').disabled = true;
 
-    // Reset visuel de la grille
+    // Nettoyage de la grille
     document.querySelectorAll('.cell').forEach(cell => {
         cell.className = 'cell';
         cell.innerHTML = '';
     });
 
-    // Placement aléatoire des mines
-    minesLocations = [];
-    while (minesLocations.length < minesCount) {
-        let r = Math.floor(Math.random() * GRID_SIZE);
-        if (!minesLocations.includes(r)) minesLocations.push(r);
+    document.getElementById('bet-amount').disabled = true;
+    document.getElementById('play-btn').style.display = 'none';
+    document.getElementById('cashout-btn').style.display = 'block';
+    document.getElementById('cashout-btn').innerHTML = `ENCAISSER (${bet.toFixed(2)} GC)`;
+
+    // ON APPELLE LE SERVEUR
+    const { data, error } = await client.rpc('demarrer_mines', {
+        p_pseudo: monPseudo,
+        p_mise: bet,
+        p_nb_mines: minesCount
+    });
+
+    if (error) {
+        alert("Erreur de transaction !");
+        return;
     }
 
-    revealedCount = 0;
+    currentPartieId = data.id; // On stocke l'ID sécurisé
     isMinesPlaying = true;
+    revealedCount = 0;
     
-    // Gérer l'affichage des boutons
-    document.getElementById('play-btn').style.display = 'none';
-    let cashoutBtn = document.getElementById('cashout-btn');
-    cashoutBtn.style.display = 'block';
-    cashoutBtn.innerHTML = `ENCAISSER (${bet.toFixed(2)} GC)`;
+    syncBalance(); // Met à jour le compteur en haut (mise déduite)
 }
 
-// 4. CORRECTION ICI : Bouton ENCAISSER
-function cashout() {
-    if (!isMinesPlaying) return;
-    let bet = parseFloat(document.getElementById('bet-amount').value);
-    let profit = bet * calcMultiplier();
-    updateBalance(profit);
-    endMinesGame(`Gagné ! ${profit.toFixed(2)} GC`);
-}
-
-function handleCellClick(index) {
-    if (!isMinesPlaying) return;
-    
+// =========================================
+// 2. CLIQUER SUR UNE CASE
+// =========================================
+async function handleCellClick(index) {
+    if (!isMinesPlaying || !currentPartieId) return;
     let cell = document.getElementById(`cell-${index}`);
     if (cell.classList.contains('revealed-diamond')) return; 
 
-    if (minesLocations.includes(index)) {
-        // BOUM : C'est une mine
+    // ON DEMANDE AU SERVEUR SI LA CASE EST SAFE
+    const { data, error } = await client.rpc('cliquer_mine', {
+        p_id: currentPartieId,
+        p_case: index
+    });
+
+    if (error || data.status === 'erreur') return;
+
+    if (data.status === 'boum') {
+        // PERDU
         cell.classList.add('revealed-mine');
         cell.innerHTML = '💣';
-        endMinesGame("Perdu !");
-    } else {
-        // SAFE : C'est un diamant
+        endMinesGame("Perdu !", data.mines);
+    } else if (data.status === 'diamant') {
+        // GAGNÉ
         cell.classList.add('revealed-diamond');
         cell.innerHTML = '💎';
         revealedCount++;
         
         let bet = parseFloat(document.getElementById('bet-amount').value);
-        let currentGain = bet * calcMultiplier();
+        let currentGain = bet * calcMultiplierVisuel();
         document.getElementById('cashout-btn').innerHTML = `ENCAISSER (${currentGain.toFixed(2)} GC)`;
-        
-        // Auto-cashout si le joueur a trouvé tous les diamants
+
         if (revealedCount === GRID_SIZE - minesCount) {
-            cashout();
+            cashout(); // Auto-cashout
         }
     }
 }
 
-function endMinesGame(msg) {
+// =========================================
+// 3. ENCAISSER
+// =========================================
+async function cashout() {
+    if (!isMinesPlaying || !currentPartieId) return;
+
+    // ON DEMANDE AU SERVEUR DE CALCULER ET VERSER LES GAINS
+    const { data, error } = await client.rpc('encaisser_mines', {
+        p_id: currentPartieId
+    });
+
+    if (error || data.status === 'erreur') return;
+
+    endMinesGame(`Gagné ! ${data.gain.toFixed(2)} GC`, data.mines);
+    syncBalance(); // Met à jour le compteur en haut (gains ajoutés)
+}
+
+function endMinesGame(msg, minesArray) {
     isMinesPlaying = false;
+    currentPartieId = null;
     document.getElementById('bet-amount').disabled = false;
-    
-    // Remettre les boutons à leur état d'origine
     document.getElementById('play-btn').style.display = 'block';
     document.getElementById('cashout-btn').style.display = 'none';
     
-    // Révèle les mines cachées en gris pour prouver l'honnêteté
-    minesLocations.forEach(m => {
-        let c = document.getElementById(`cell-${m}`);
-        if (!c.classList.contains('revealed-mine')) {
-            c.classList.add('hidden-mine');
-            c.innerHTML = '💣';
-        }
-    });
-    
+    // Le serveur vient de nous donner l'emplacement des bombes, on les affiche
+    if (minesArray) {
+        minesArray.forEach(m => {
+            let c = document.getElementById(`cell-${m}`);
+            if (!c.classList.contains('revealed-mine')) {
+                c.classList.add('hidden-mine');
+                c.innerHTML = '💣';
+            }
+        });
+    }
     setTimeout(() => alert(msg), 100);
 }
