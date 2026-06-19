@@ -1,20 +1,11 @@
-// =========================================
-// 1. CONFIGURATION DE SUPABASE
-// =========================================
 const supabaseUrl = 'https://hiusxytfgberekcwwszr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpdXN4eXRmZ2JlcmVrY3d3c3pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3NjUyMzksImV4cCI6MjA5NzM0MTIzOX0.MP9Us-b5OFwzz-2mxc3nfExnX1_107Dejd1Tj3CfciQ';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-// =========================================
-// 2. GESTION DU JOUEUR & DE LA BANQUE
-// =========================================
 let balance = 0;
 let monPseudo = localStorage.getItem("stakelite_pseudo");
-
-console.log("=== DÉMARRAGE DU SITE ===");
 console.log("Pseudo trouvé dans le stockage local :", monPseudo);
 
-// Vérification au lancement
 if (!monPseudo) {
     console.log("Aucun pseudo en mémoire. Affichage de la pop-up.");
     document.getElementById('login-overlay').classList.add('active');
@@ -23,7 +14,6 @@ if (!monPseudo) {
     initPlayer();
 }
 
-// Bouton "ENTRER" de la pop-up
 function login() {
     let input = document.getElementById('pseudo-input').value.trim();
     
@@ -43,8 +33,6 @@ function login() {
 // Chargement des données depuis Supabase
 async function initPlayer() {
     console.log("Recherche du joueur dans Supabase :", monPseudo);
-    
-    // On utilise une recherche classique sans .single() pour éviter le plantage automatique
     let { data, error: selectError } = await client
         .from('Joueurs')
         .select('solde')
@@ -82,24 +70,21 @@ async function initPlayer() {
     document.getElementById('global-balance').innerText = balance.toFixed(2);
 }
 
-// Mise à jour de l'argent
 async function updateBalance(amount) {
-    balance += amount;
-    document.getElementById('global-balance').innerText = balance.toFixed(2);
-
-    const { error } = await client
-        .from('Joueurs')
-        .update({ solde: balance })
-        .eq('pseudo', monPseudo);
+    const { data, error } = await client.rpc('update_balance_secure', {
+        p_pseudo: monPseudo,
+        p_amount: amount
+    });
         
     if (error) {
-        console.error("❌ Erreur lors de la SAUVEGARDE du solde :", error.message);
+        console.error("❌ Erreur de transaction :", error.message);
+        return;
     }
+    balance = data;
+    document.getElementById('global-balance').innerText = balance.toFixed(2);
 }
 
-// =========================================
-// 3. NAVIGATION (Onglets)
-// =========================================
+// Navigation
 function switchTab(game, btnElement) {
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     btnElement.classList.add('active');
