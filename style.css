@@ -514,3 +514,11 @@ input {
 .auth-switch a:hover {
     text-decoration: underline;
 }
+
+/* =========================================
+        PARAMETRE DU PROFIL
+   ========================================= */
+
+.dropdown-header:hover {
+    background-color: var(--bg-cell);
+}

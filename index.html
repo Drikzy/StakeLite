@@ -43,7 +43,7 @@
         </div>
     </div>
     <header>
-        <div class="logo">STAKE<span>LITE</span></div>
+        <a href="index.html" class="logo" style="text-decoration: none; color: var(--text-main);">STAKE<span>LITE</span></a>
         
         <div class="header-right">
             <div class="balance-box"><span id="global-balance">10000.00</span> GC</div>
@@ -52,9 +52,10 @@
                 <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
                 
                 <div class="dropdown" id="user-dropdown">
-                    <div class="dropdown-header">
-                        <span id="dropdown-pseudo">Joueur</span>
-                    </div>
+                    <a href="profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
+                        <div id="dropdown-pseudo">Joueur</div>
+                    </a>
+                    
                     <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
                 </div>
             </div>
