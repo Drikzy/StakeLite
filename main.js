@@ -1,3 +1,6 @@
+// =========================================
+// 1. CONFIGURATION DE SUPABASE
+// =========================================
 const supabaseUrl = 'https://hiusxytfgberekcwwszr.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpdXN4eXRmZ2JlcmVrY3d3c3pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3NjUyMzksImV4cCI6MjA5NzM0MTIzOX0.MP9Us-b5OFwzz-2mxc3nfExnX1_107Dejd1Tj3CfciQ';
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -8,10 +11,15 @@ const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 let balance = 0;
 let monPseudo = localStorage.getItem("stakelite_pseudo");
 
+console.log("=== DÉMARRAGE DU SITE ===");
+console.log("Pseudo trouvé dans le stockage local :", monPseudo);
+
 // Vérification au lancement
 if (!monPseudo) {
+    console.log("Aucun pseudo en mémoire. Affichage de la pop-up.");
     document.getElementById('login-overlay').classList.add('active');
 } else {
+    console.log("Pseudo détecté. Initialisation du joueur...");
     initPlayer();
 }
 
@@ -26,6 +34,7 @@ function login() {
 
     monPseudo = input;
     localStorage.setItem("stakelite_pseudo", monPseudo);
+    console.log("Pseudo enregistré dans le stockage local :", monPseudo);
     
     document.getElementById('login-overlay').classList.remove('active');
     initPlayer();
@@ -33,22 +42,41 @@ function login() {
 
 // Chargement des données depuis Supabase
 async function initPlayer() {
-    console.log("Connexion pour :", monPseudo);
+    console.log("Recherche du joueur dans Supabase :", monPseudo);
     
-    // 🔴 On utilise 'client' ici
-    let { data, error } = await client
-        .from('joueurs')
+    // On utilise une recherche classique sans .single() pour éviter le plantage automatique
+    let { data, error: selectError } = await client
+        .from('Joueurs')
         .select('solde')
-        .eq('pseudo', monPseudo)
-        .single();
+        .eq('pseudo', monPseudo);
 
-    if (data) {
-        balance = data.solde;
-    } else {
+    if (selectError) {
+        console.error("❌ Erreur lors de la RECHERCHE du joueur :", selectError.message, selectError);
+        alert("Erreur de connexion à la base de données (voir console F12)");
+        return;
+    }
+
+    // Si le joueur existe déjà
+    if (data && data.length > 0) {
+        balance = data[0].solde;
+        console.log("✅ Joueur trouvé ! Solde chargé depuis Supabase :", balance);
+    } 
+    // Si le joueur n'existe pas encore
+    else {
         balance = 10000;
-        await client
-            .from('joueurs')
+        console.log("Joueur inconnu dans Supabase. Création de la ligne en cours...");
+        
+        let { error: insertError } = await client
+            .from('Joueurs')
             .insert([{ pseudo: monPseudo, solde: balance }]);
+
+        if (insertError) {
+            console.error("❌ Erreur critique lors de l'INSERTION du joueur :", insertError.message, insertError);
+            alert("Impossible de créer ton profil dans Supabase : " + insertError.message);
+            return;
+        } else {
+            console.log("🎉 Nouvelle ligne créée avec succès dans Supabase !");
+        }
     }
     
     document.getElementById('global-balance').innerText = balance.toFixed(2);
@@ -59,14 +87,13 @@ async function updateBalance(amount) {
     balance += amount;
     document.getElementById('global-balance').innerText = balance.toFixed(2);
 
-    // 🔴 Et on utilise 'client' ici aussi
     const { error } = await client
-        .from('joueurs')
+        .from('Joueurs')
         .update({ solde: balance })
         .eq('pseudo', monPseudo);
         
     if (error) {
-        console.error("Erreur de sauvegarde :", error);
+        console.error("❌ Erreur lors de la SAUVEGARDE du solde :", error.message);
     }
 }
 
