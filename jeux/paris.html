@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StakeLite - Paris Sportifs</title>
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <link rel="stylesheet" href="../style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../main.js" defer></script>
+    <script src="paris.js" defer></script>
+</head>
+<body>
+    <header>
+        <a href="../index.html" class="logo" style="text-decoration: none; color: var(--text-main);">STAKE<span>LITE</span></a>
+        <div class="header-right">
+            <div class="balance-box"><span id="global-balance">0.00</span> GC</div>
+            <div class="user-menu">
+                <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
+                <div class="dropdown" id="user-dropdown">
+                    <a href="../profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
+                        <div id="dropdown-pseudo" style="margin-bottom: 5px;">Joueur</div>
+                        <div style="font-size: 11px; color: #2fbf71; font-weight: normal;">⚙️ Paramètres</div>
+                    </a>
+                    <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main style="flex-direction: column; align-items: center; padding: 40px 20px;">
+        <div style="width: 100%; max-width: 600px;">
+            <h2 style="text-align: center; margin-bottom: 30px;">⚽ Paris du Jour</h2>
+            
+            <div id="matchs-container" class="matchs-list">
+                <p style="text-align: center; color: var(--text-sec);">Chargement des matchs...</p>
+            </div>
+        </div>
+        <h2 style="text-align: center; margin-top: 50px; margin-bottom: 30px;">📋 Mes Paris</h2>
+            <div id="my-bets-container" class="my-bets-list">
+                <p style="text-align: center; color: var(--text-sec);">Chargement de tes paris...</p>
+            </div>
+    </main>
+
+    <div id="login-overlay" class="overlay">
+        <div class="login-box">
+            <h2>Connexion à StakeLite</h2>
+            <div class="auth-form">
+                <div id="pseudo-group" class="input-group" style="display: none;">
+                    <label>Pseudo</label>
+                    <input type="text" id="auth-pseudo" placeholder="Ex: Flo...">
+                </div>
+                <div class="input-group">
+                    <label>Adresse Email</label>
+                    <input type="email" id="auth-email" placeholder="exemple@mail.com">
+                </div>
+                <div class="input-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="auth-password" placeholder="••••••••">
+                </div>
+                <button id="auth-main-btn" class="main-btn green" onclick="handleAuth()">SE CONNECTER</button>
+            </div>
+            <p class="auth-switch">
+                <span id="auth-switch-text">Pas encore de compte ?</span> 
+                <a href="#" id="auth-switch-link" onclick="toggleAuthMode(event)">S'inscrire</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

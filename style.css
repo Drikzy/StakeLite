@@ -486,6 +486,177 @@ input {
 }
 
 /* =========================================
+   PARIS SPORTIFS
+   ========================================= */
+.matchs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.match-card {
+    background-color: var(--bg-panel);
+    border: 1px solid var(--bg-cell);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.match-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-sec);
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--bg-main);
+    padding-bottom: 8px;
+}
+
+.match-teams {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.odds-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.odd-btn {
+    flex: 1;
+    background-color: var(--bg-main);
+    border: 1px solid var(--bg-cell);
+    color: white;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.odd-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+}
+
+.odd-btn.selected {
+    background-color: var(--accent);
+    color: black;
+    border-color: var(--accent);
+}
+
+.odd-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.bet-slip {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    border-top: 1px solid var(--bg-main);
+    padding-top: 15px;
+}
+
+/* Animation du chrono en direct */
+@keyframes pulse-live {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
+.live-minute {
+    color: #ff4d4d;
+    font-size: 13px;
+    font-weight: bold;
+    animation: pulse-live 2s infinite;
+    margin-bottom: 5px;
+}
+
+.live-score-text {
+    font-size: 26px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 2px;
+}
+
+/* =========================================
+   HISTORIQUE DES PARIS
+   ========================================= */
+.my-bets-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+.bet-history-card {
+    background-color: var(--bg-panel);
+    border-left: 4px solid var(--text-sec);
+    border-radius: 6px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.bet-history-card.en_cours {
+    border-left-color: #ffaa00;
+}
+
+.bet-history-card.gagne {
+    border-left-color: var(--accent);
+}
+
+.bet-history-card.perdu {
+    border-left-color: var(--red);
+}
+
+.bet-history-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.bet-history-teams {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.bet-history-meta {
+    font-size: 12px;
+    color: var(--text-sec);
+}
+
+.bet-status-badge {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.bet-status-badge.en_cours {
+    background-color: rgba(255, 170, 0, 0.1);
+    color: #ffaa00;
+}
+
+.bet-status-badge.gagne {
+    background-color: rgba(0, 231, 1, 0.1);
+    color: var(--accent);
+}
+
+.bet-status-badge.perdu {
+    background-color: rgba(255, 77, 77, 0.1);
+    color: var(--red);
+}
+
+/* =========================================
         ÉCRAN D'AUTHENTIFICATION
    ========================================= */
 .overlay {
