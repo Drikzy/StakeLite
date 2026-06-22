@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StakeLite - FAQ</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="favicon.png">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="main.js" defer></script>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo" style="text-decoration: none; color: var(--text-main);">STAKE<span>LITE</span></a>
+        
+        <div class="header-right">
+            <div class="balance-box"><span id="global-balance">10000.00</span> GC</div>
+            
+            <div class="user-menu">
+                <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
+                
+                <div class="dropdown" id="user-dropdown">
+                    <a href="profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
+                        <div id="dropdown-pseudo">Joueur</div>
+                    </a>
+                    
+                    <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="legal-container">
+        <h2>FAQ</h2>
+        <p>Rien d'intéressant pour le moment...</p>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="legal.html">Mentions Légales & Confidentialité</a>
+                <a href="mailto:[Ton email]">Contact</a>
+                <a href="faq.html">FAQ & Règles</a>
+            </div>
+            <div class="footer-copy">
+                <p>&copy; 2026 StakeLite. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

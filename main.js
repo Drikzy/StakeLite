@@ -8,15 +8,21 @@ let isLoginMode = true; // true = page de connexion, false = page d'inscription
 async function checkSession() {
     const { data: { session } } = await client.auth.getSession();
     
+    const loginOverlay = document.getElementById('login-overlay');
+
     if (session) {
         console.log("Session trouvée ! Connecté avec :", session.user.email);
         monPseudo = session.user.user_metadata.pseudo;
+        if (loginOverlay) {
+            loginOverlay.classList.remove('active');
+        }
         
-        document.getElementById('login-overlay').classList.remove('active');
         initPlayer();
     } else {
         console.log("Aucune session. Affichage de l'écran d'accueil.");
-        document.getElementById('login-overlay').classList.add('active');
+        if (loginOverlay) {
+            loginOverlay.classList.add('active');
+        }
     }
 }
 
@@ -94,7 +100,10 @@ async function handleAuth() {
         monPseudo = data.user.user_metadata.pseudo;
         console.log("Connexion réussie !");
     }
-    document.getElementById('login-overlay').classList.remove('active');
+    const loginOverlay = document.getElementById('login-overlay');
+    if (loginOverlay) {
+        loginOverlay.classList.remove('active');
+    }
     initPlayer();
 }
 

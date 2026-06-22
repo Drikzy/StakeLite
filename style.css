@@ -782,3 +782,47 @@ input {
 .dropdown-header:hover {
     background-color: var(--bg-cell);
 }
+
+/* =========================================
+        PAGE LEGAL
+   ========================================= */
+
+.legal-container {
+    display: block !important;
+    max-width: 800px !important;
+    margin: 40px auto !important;
+    padding: 30px !important;
+    background-color: var(--bg-main);
+    border-radius: 8px;
+    color: #f0f0f0;
+    text-align: left !important;
+}
+
+.legal-container h2, 
+.legal-container h3, 
+.legal-container p, 
+.legal-container ul {
+    display: block !important;
+    width: 100% !important;
+    float: none !important;
+}
+
+.legal-container h2 {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+
+.legal-container h3 {
+    color: var(--accent);
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.legal-container p, .legal-container ul {
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.legal-container ul {
+    margin-left: 40px;
+}
