@@ -51,16 +51,15 @@ body {
     background: rgba(255, 255, 255, 0.1);
 }
 
-/* Bouton principal pour "S'inscrire" */
 .signup-btn {
-    background: #00ccff; /* Cyan comme tes FreeCoins */
-    color: #121922; /* Texte sombre pour contraster */
+    background: var(--accent);
+    color: #121922;
 }
 
 .signup-btn:hover {
-    background: #00b3e6;
+    background: var(--accent);
     transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0, 204, 255, 0.3);
+    box-shadow: 0 4px 10px #007a00;
 }
 
 /* =========================================
@@ -188,7 +187,7 @@ header {
 }
 
 .footer-links a:hover {
-    color: #ffcc00;
+    color: var(--accent);
 }
 
 .footer-copy .disclaimer {
@@ -974,4 +973,47 @@ input {
 .history-date {
     color: #666;
     font-size: 0.8rem;
+}
+
+/* =========================================
+   SECTION EXPLICATION DES JEUX
+   ========================================= */
+
+.explanation-section {
+    background-color: var(--bg-panel);
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+#warning-game {
+    background-color: rgba(255, 153, 0, 0.07);
+    border-left: 4px solid #ff9900;
+    padding: 15px 20px;
+    border-radius: 4px;
+    margin-bottom: 25px;
+}
+
+#warning-game h3 {
+    margin: 0;
+    color: #ff9900;
+    font-size: 0.95rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+#expl-game h3 {
+    color: var(--text-main);
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 1.2rem;
+}
+
+#expl-game p {
+    color: var(--text-sec);
+    line-height: 1.6;
+    font-size: 0.95rem;
+    margin: 0;
 }

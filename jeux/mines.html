@@ -97,39 +97,32 @@
             </div>
         </section>
     </main>
-
-    <div id="login-overlay" class="overlay">
-        <div class="login-box">
-            <h2 id="auth-title">Connexion à StakeLite</h2>
-            <div class="auth-form">
-                <div id="pseudo-group" class="input-group" style="display: none;">
-                    <label>Pseudo</label>
-                    <input type="text" id="auth-pseudo" placeholder="Ex: Flo...">
-                </div>
-                <div class="input-group">
-                    <label>Adresse Email</label>
-                    <input type="email" id="auth-email" placeholder="exemple@mail.com">
-                </div>
-                <div class="input-group">
-                    <label>Mot de passe</label>
-                    <input type="password" id="auth-password" placeholder="••••••••">
-                </div>
-                <button id="auth-main-btn" class="main-btn green" onclick="handleAuth()">SE CONNECTER</button>
-            </div>
-            <p class="auth-switch">
-                <span id="auth-switch-text">Pas encore de compte ?</span> 
-                <a href="#" id="auth-switch-link" onclick="toggleAuthMode(event)">S'inscrire</a>
+    <section id="game-explanation" class="explanation-section">
+        <div id="warning-game">
+            <h3>⚠️ Attention : Ne quitte pas la page en pleine partie, sinon tu perdras ta mise !</h3>
+        </div>
+        
+        <div id="expl-game">
+            <h3>Règles du Jeu des Mines</h3>
+            <p>
+                Sélectionne le nombre de mines cachées sur la grille et saisis ta mise. 
+                À chaque case retournée qui contient un diamant, ton multiplicateur de gain augmente et tu peux choisir d'encaisser à tout moment. 
+                Si tu as le malheur de cliquer sur une mine, la partie s'arrête instantanément et ta mise est perdue !
             </p>
         </div>
+    </section>
+
+    <div class="game-history-section">
+        <h3>Dernières parties de Mines</h3>
+        <div id="historique-mines-container"></div>
     </div>
 </body>
 <footer class="site-footer">
     <div class="footer-content">
         <div class="footer-links">
-            <a href="/mentions-legales">Mentions Légales</a>
-            <a href="/confidentialite">Politique de Confidentialité</a>
-            <a href="/contact">Contact</a>
-            <a href="/faq">FAQ & Règles</a>
+            <a href="../legal.html">Mentions Légales & Confidentialité</a>
+            <a href="../contact.html">Contact</a>
+            <a href="../faq.html">FAQ & Règles</a>
         </div>
         <div class="footer-copy">
             <p>&copy; 2026 StakeLite. Tous droits réservés.</p>

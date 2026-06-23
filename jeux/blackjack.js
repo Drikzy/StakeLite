@@ -92,9 +92,13 @@ function toggleActionBtns(disabled) {
 // =========================================
 async function startBlackjack() {
     let bet = parseFloat(document.getElementById('bj-bet').value);
-    if (isNaN(bet) || bet <= 0 || bet > balance) return alert("Mise invalide ou solde insuffisant");
+    let currentGC = parseFloat(document.getElementById('global-balance-gc').innerText);
+    if (isNaN(bet) || bet <= 0 || bet > currentGC) {
+        return alert("Mise invalide ou solde de GoldCoins insuffisant !");
+    }
 
     isBjPlaying = true;
+    window.isGameActive = true;
     document.getElementById('bj-bet-controls').style.display = 'none';
     document.getElementById('bj-action-controls').style.display = 'flex';
     toggleActionBtns(true);
@@ -105,6 +109,9 @@ async function startBlackjack() {
     if (error) {
         alert("Erreur de transaction !");
         isBjPlaying = false;
+        window.isGameActive = false;
+        document.getElementById('bj-bet-controls').style.display = 'block';
+        document.getElementById('bj-action-controls').style.display = 'none';
         return;
     }
 
@@ -114,8 +121,6 @@ async function startBlackjack() {
     let dHandSafe = parseCards(data.main_croupier);
     
     updateHandsUI(pHandSafe, dHandSafe, true);
-    
-    // 🧮 AFFICHAGE DES SCORES AU LANCEMENT
     document.getElementById('player-score').innerText = `Toi : ${calculateScore(pHandSafe)}`;
     document.getElementById('dealer-score').innerText = `Croupier : ${calculateScore([dHandSafe[0]])}`;
     
@@ -186,6 +191,7 @@ function endBlackjack(msg, winAmount, color, dHandReveal = null, pHand = null) {
     
     isBjPlaying = false;
     currentBjId = null;
+    window.isGameActive = false;
     syncBalance();
     chargerEtAfficherHistorique('historique-blackjack-container', 'Blackjack');
 

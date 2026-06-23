@@ -244,6 +244,28 @@ async function chargerEtAfficherHistorique(containerId, gameFilter = null) {
     container.innerHTML = html;
 }
 
+// =========================================
+// SÉCURITÉ ANTI-QUITTE (En jeu)
+// =========================================
+
+window.isGameActive = false;
+window.addEventListener('beforeunload', (event) => {
+    if (window.isGameActive) {
+        event.preventDefault(); 
+        event.returnValue = "Vous avez une partie en cours ! Si vous quittez, votre mise sera perdue.";
+    }
+});
+
+document.addEventListener('click', (event) => {
+    const link = event.target.closest('a');
+    if (link && window.isGameActive) {
+        if (link.getAttribute('href') && link.getAttribute('href') !== '#') {
+            event.preventDefault();
+            alert("⚠️ Impossible de quitter : Terminez votre partie en cours !");
+        }
+    }
+});
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
