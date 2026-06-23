@@ -56,5 +56,9 @@ async function updateProfile() {
     alert("Profil mis à jour avec succès !");
 }
 
-checkAccess();
-chargerEtAfficherHistorique('historique-global-container');
+async function initialiserPageProfil() {
+    await checkAccess();
+    chargerEtAfficherHistorique('historique-global-container');
+}
+
+initialiserPageProfil();

@@ -115,15 +115,23 @@ async function logout() {
 async function initPlayer() {
     let { data, error } = await client
         .from('Joueurs')
-        .select('solde')
+        .select('GoldCoins')
         .eq('pseudo', monPseudo);
 
     if (data && data.length > 0) {
-        balance = data[0].solde;
-        document.getElementById('global-balance').innerText = balance.toFixed(2);
+        balance = data[0].GoldCoins;
+        
+        const balanceElement = document.getElementById('global-balance');
+        if (balanceElement) {
+            balanceElement.innerText = balance.toFixed(2);
+        }
     }
-    document.getElementById('user-avatar').innerText = monPseudo.charAt(0);
-    document.getElementById('dropdown-pseudo').innerText = monPseudo;
+
+    const avatarElement = document.getElementById('user-avatar');
+    const pseudoElement = document.getElementById('dropdown-pseudo');
+
+    if (avatarElement) avatarElement.innerText = monPseudo.charAt(0);
+    if (pseudoElement) pseudoElement.innerText = monPseudo;
 }
 
 async function updateBalance(amount) {

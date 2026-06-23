@@ -9,10 +9,14 @@ function modifyBet(multiplier) {
 }
 
 async function syncBalance() {
-    const { data } = await client.from('Joueurs').select('solde').eq('pseudo', monPseudo).single();
+    const { data } = await client.from('Joueurs').select('GoldCoins').eq('pseudo', monPseudo).single();
+    
     if (data) {
-        balance = data.solde;
-        document.getElementById('global-balance').innerText = balance.toFixed(2);
+        balance = data.GoldCoins;
+        const balanceElement = document.getElementById('global-balance');
+        if (balanceElement) {
+            balanceElement.innerText = balance.toFixed(2);
+        }
     }
 }
 
@@ -162,7 +166,7 @@ async function stand() {
 }
 
 // =========================================
-// FIN DE PARTIE
+// FIN DE PARTIE 
 // =========================================
 function endBlackjack(msg, winAmount, color, dHandReveal = null, pHand = null) {
     setBjMessage(msg, color);
@@ -173,13 +177,13 @@ function endBlackjack(msg, winAmount, color, dHandReveal = null, pHand = null) {
         dContainer.innerHTML = '';
         dHandReveal.forEach(c => dContainer.appendChild(renderCard(c, false)));
         
-        // 🧮 AFFICHAGE DU SCORE FINAL DU CROUPIER
         document.getElementById('dealer-score').innerText = `Croupier : ${calculateScore(dHandReveal)}`;
     }
     
     isBjPlaying = false;
     currentBjId = null;
     syncBalance();
+    chargerEtAfficherHistorique('historique-blackjack-container', 'Blackjack');
 
     setTimeout(() => {
         document.getElementById('bj-action-controls').style.display = 'none';
