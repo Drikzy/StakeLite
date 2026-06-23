@@ -184,6 +184,7 @@ async function chargerHistorique() {
 async function chargerEtAfficherHistorique(containerId, gameFilter = null) {
     const container = document.getElementById(containerId);
     if (!container) return;
+
     let query = client
         .from('Historique_Parties')
         .select('*')
@@ -195,6 +196,7 @@ async function chargerEtAfficherHistorique(containerId, gameFilter = null) {
     } else {
         query = query.limit(30);
     }
+    
     const { data, error } = await query;
 
     if (error) {
@@ -207,13 +209,14 @@ async function chargerEtAfficherHistorique(containerId, gameFilter = null) {
         container.innerHTML = "<p>Aucune partie jouée pour le moment.</p>";
         return;
     }
-
     let html = `
         <table class="history-table">
             <thead>
                 <tr>
-                    ${!gameFilter ? '<th>Jeu</th>' : ''} <th>Mise</th>
-                    <th>Gain</th>
+                    ${!gameFilter ? '<th>Jeu</th>' : ''} 
+                    <th>Résultat</th>
+                    <th>Mise</th>
+                    <th>Profit / Perte</th>
                     <th>Monnaie</th>
                     <th>Date</th>
                 </tr>
@@ -224,15 +227,34 @@ async function chargerEtAfficherHistorique(containerId, gameFilter = null) {
     data.forEach(partie => {
         const dateObj = new Date(partie.date_partie);
         const dateFormatee = dateObj.toLocaleDateString('fr-FR') + ' ' + dateObj.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
+        const profitNet = partie.gain - partie.mise;
         
-        const gainClass = partie.gain > 0 ? 'text-win' : 'text-loss';
+        let resultatTexte = "";
+        let resultatClass = "";
+        let profitAffiche = "";
+
+        if (profitNet > 0) {
+            resultatTexte = "Victoire";
+            resultatClass = "text-win";
+            profitAffiche = "+" + profitNet.toFixed(2);
+        } else if (profitNet < 0) {
+            resultatTexte = "Défaite";
+            resultatClass = "text-loss";
+            profitAffiche = profitNet.toFixed(2);
+        } else {
+            resultatTexte = "Égalité";
+            resultatClass = "text-tie";
+            profitAffiche = "0.00";
+        }
+
         const monnaieColor = partie.type_monnaie === 'GoldCoins' ? '#ffcc00' : '#00ccff';
 
         html += `
             <tr>
                 ${!gameFilter ? `<td>${partie.nom_jeu}</td>` : ''}
-                <td>${partie.mise}</td>
-                <td class="${gainClass}">${partie.gain > 0 ? '+' + partie.gain : partie.gain}</td>
+                <td class="${resultatClass}" style="font-weight: bold;">${resultatTexte}</td>
+                <td>${partie.mise.toFixed(2)}</td>
+                <td class="${resultatClass}">${profitAffiche}</td>
                 <td style="color: ${monnaieColor}">${partie.type_monnaie === 'GoldCoins' ? 'GC' : 'FC'}</td>
                 <td class="history-date">${dateFormatee}</td>
             </tr>
