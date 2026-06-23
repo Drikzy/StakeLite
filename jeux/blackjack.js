@@ -16,7 +16,6 @@ async function syncBalance() {
     }
 }
 
-// 🧮 NOUVELLE FONCTION : Calculer le score pour l'affichage visuel
 function calculateScore(hand) {
     let score = 0;
     let aces = 0;
@@ -187,3 +186,5 @@ function endBlackjack(msg, winAmount, color, dHandReveal = null, pHand = null) {
         document.getElementById('bj-bet-controls').style.display = 'block';
     }, 2000);
 }
+
+chargerEtAfficherHistorique('historique-blackjack-container', 'Blackjack');

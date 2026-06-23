@@ -826,3 +826,40 @@ input {
 .legal-container ul {
     margin-left: 40px;
 }
+
+/* =========================================
+        HISTORIQUE
+   ========================================= */
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+.history-table th, .history-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #333;
+}
+
+.history-table th {
+    color: #888;
+    font-weight: normal;
+}
+
+.text-win {
+    color: #00ff66; /* Vert fluo pour les gains */
+    font-weight: bold;
+}
+
+.text-loss {
+    color: #888; /* Gris pour les pertes, moins agressif que le rouge */
+}
+
+.history-date {
+    color: #666;
+    font-size: 0.8rem;
+}

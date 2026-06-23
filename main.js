@@ -147,7 +147,6 @@ function sleep(ms) {
 
 checkSession();
 
-// Affiche ou cache le menu déroulant
 function toggleUserMenu() {
     document.getElementById('user-dropdown').classList.toggle('active');
 }
@@ -155,4 +154,83 @@ function toggleUserMenu() {
 async function logout() {
     await client.auth.signOut();
     location.reload();
+}
+
+async function chargerHistorique() {
+    const { data, error } = await client
+        .from('Historique_Parties')
+        .select('*')
+        .eq('joueur_pseudo', monPseudo)
+        .order('date_partie', { ascending: false }) // Du plus récent au plus ancien
+        .limit(20);
+
+    if (error) {
+        console.error("Erreur de chargement de l'historique :", error);
+        return;
+    }
+
+    console.log("Historique récupéré :", data);
+    return data;
+}
+
+async function chargerEtAfficherHistorique(containerId, gameFilter = null) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    let query = client
+        .from('Historique_Parties')
+        .select('*')
+        .eq('joueur_pseudo', monPseudo)
+        .order('date_partie', { ascending: false });
+
+    if (gameFilter) {
+        query = query.eq('nom_jeu', gameFilter).limit(10);
+    } else {
+        query = query.limit(30);
+    }
+    const { data, error } = await query;
+
+    if (error) {
+        console.error("Erreur de chargement de l'historique :", error);
+        container.innerHTML = "<p>Impossible de charger l'historique.</p>";
+        return;
+    }
+
+    if (data.length === 0) {
+        container.innerHTML = "<p>Aucune partie jouée pour le moment.</p>";
+        return;
+    }
+
+    let html = `
+        <table class="history-table">
+            <thead>
+                <tr>
+                    ${!gameFilter ? '<th>Jeu</th>' : ''} <th>Mise</th>
+                    <th>Gain</th>
+                    <th>Monnaie</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    data.forEach(partie => {
+        const dateObj = new Date(partie.date_partie);
+        const dateFormatee = dateObj.toLocaleDateString('fr-FR') + ' ' + dateObj.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
+        
+        const gainClass = partie.gain > 0 ? 'text-win' : 'text-loss';
+        const monnaieColor = partie.type_monnaie === 'GoldCoins' ? '#ffcc00' : '#00ccff';
+
+        html += `
+            <tr>
+                ${!gameFilter ? `<td>${partie.nom_jeu}</td>` : ''}
+                <td>${partie.mise}</td>
+                <td class="${gainClass}">${partie.gain > 0 ? '+' + partie.gain : partie.gain}</td>
+                <td style="color: ${monnaieColor}">${partie.type_monnaie === 'GoldCoins' ? 'GC' : 'FC'}</td>
+                <td class="history-date">${dateFormatee}</td>
+            </tr>
+        `;
+    });
+
+    html += `</tbody></table>`;
+    container.innerHTML = html;
 }

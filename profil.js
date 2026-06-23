@@ -1,8 +1,3 @@
-const supabaseUrl = 'https://hiusxytfgberekcwwszr.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpdXN4eXRmZ2JlcmVrY3d3c3pyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3NjUyMzksImV4cCI6MjA5NzM0MTIzOX0.MP9Us-b5OFwzz-2mxc3nfExnX1_107Dejd1Tj3CfciQ';
-const client = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-let monPseudo = "";
 async function checkAccess() {
     const { data: { session } } = await client.auth.getSession();
     
@@ -62,3 +57,4 @@ async function updateProfile() {
 }
 
 checkAccess();
+chargerEtAfficherHistorique('historique-global-container');

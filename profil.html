@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
     
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../main.js" defer></script>
     <script src="profil.js" defer></script>
 </head>
 <body>
@@ -39,6 +40,13 @@
             <button class="main-btn green" style="margin-top: 10px;" onclick="updateProfile()">SAUVEGARDER</button>
         </div>
     </main>
+
+    <div class="profil-section">
+        <h3>Historique Global</h3>
+        <div id="historique-global-container">
+            <p>Chargement des parties...</p>
+        </div>
+    </div>
 </body>
 <footer class="site-footer">
     <div class="footer-content">
