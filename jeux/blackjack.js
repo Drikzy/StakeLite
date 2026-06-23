@@ -9,14 +9,18 @@ function modifyBet(multiplier) {
 }
 
 async function syncBalance() {
-    const { data } = await client.from('Joueurs').select('GoldCoins').eq('pseudo', monPseudo).single();
+    const { data } = await client
+        .from('Joueurs')
+        .select('"GoldCoins", "FreeCoins"')
+        .eq('pseudo', monPseudo)
+        .single();
     
     if (data) {
-        balance = data.GoldCoins;
-        const balanceElement = document.getElementById('global-balance');
-        if (balanceElement) {
-            balanceElement.innerText = balance.toFixed(2);
-        }
+        const gcElement = document.getElementById('global-balance-gc');
+        const fcElement = document.getElementById('global-balance-fc');
+        
+        if (gcElement) gcElement.innerText = (data.GoldCoins || 0).toFixed(2);
+        if (fcElement) fcElement.innerText = (data.FreeCoins || 0).toFixed(2);
     }
 }
 

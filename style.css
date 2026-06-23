@@ -27,6 +27,43 @@ body {
 }
 
 /* =========================================
+   BOUTONS DE CONNEXION / INSCRIPTION
+   ========================================= */
+
+.auth-btn {
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    border: none;
+}
+
+/* Bouton fantôme pour "Se connecter" */
+.login-btn {
+    background: transparent;
+    color: var(--text-main);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.login-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Bouton principal pour "S'inscrire" */
+.signup-btn {
+    background: #00ccff; /* Cyan comme tes FreeCoins */
+    color: #121922; /* Texte sombre pour contraster */
+}
+
+.signup-btn:hover {
+    background: #00b3e6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 204, 255, 0.3);
+}
+
+/* =========================================
         HEADER & MENU UTILISATEUR
    ========================================= */
 header {
@@ -151,13 +188,53 @@ header {
 }
 
 .footer-links a:hover {
-    color: #ffcc00; /* Une couleur qui rappelle les pièces/or */
+    color: #ffcc00;
 }
 
 .footer-copy .disclaimer {
     font-size: 0.75rem;
     color: #555;
     margin-top: 10px;
+}
+
+.fc-box {
+    color: #00ccff;
+    border: 1px solid rgba(0, 204, 255, 0.3);
+    background-color: rgba(0, 204, 255, 0.05);
+}
+
+a.fc-box {
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+a.fc-box:hover {
+    transform: translateY(-2px);
+    background-color: rgba(0, 204, 255, 0.15);
+    box-shadow: 0 4px 10px rgba(0, 204, 255, 0.2);
+}
+
+.plus-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background-color: #00ccff;
+    color: #121922;
+    border-radius: 50%;
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 8px;
+    line-height: 1;
+    padding-bottom: 5px;
+    box-sizing: border-box;
+}
+
+.gc-box {
+    color: #ffcc00; 
+    border: 1px solid rgba(255, 204, 0, 0.3);
+    background-color: rgba(255, 204, 0, 0.05);
 }
 
 /* =========================================
