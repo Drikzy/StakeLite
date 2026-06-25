@@ -95,15 +95,24 @@
                 </div>
 
                 <div id="bj-bet-controls">
-                    <label>Montant de la mise</label>
+                    <label class="mise-label" style="margin-bottom: 8px; display: block;">Montant de la mise</label>
                     <div class="bet-row">
-                        <input type="number" id="bj-bet" value="100" min="1">
-                        <button class="mod-btn" onclick="modifyBet(0.5)">1/2</button>
-                        <button class="mod-btn" onclick="modifyBet(2)">x2</button>
+                        <div class="input-wrapper" style="flex: 1;">
+                            <input type="number" id="montant-mise-bj" value="100" min="1">
+                            
+                            <div class="toggle-container">
+                            <label class="switch-inline">
+                                <input type="checkbox" id="currency-toggle">
+                                <span class="slider-inline round"></span>
+                            </label>
+                            <span class="fc-text">FC</span>
+                            </div>
+                        </div>
+                        <button class="mod-btn" onclick="moitieMise()">1/2</button>
+                        <button class="mod-btn" onclick="doubleMise()">x2</button>
                     </div>
                     <button class="main-btn green" style="margin-top: 15px;" id="bj-play-btn" onclick="startBlackjack()">DISTRIBUER</button>
                 </div>
-
                 <div class="actions-grid" id="bj-action-controls" style="display: none; margin-top: 15px;">
                     <button class="action-btn" style="background-color: #213743;" onclick="hit()">TIRER</button>
                     <button class="action-btn" style="background-color: var(--accent); color: black;" onclick="stand()">RESTER</button>

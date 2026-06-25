@@ -712,6 +712,15 @@ input:checked ~ .fc-text {
     }
 }
 
+.bet-row .input-wrapper {
+  flex: 1;
+}
+
+/* On s'assure que le champ input à l'intérieur n'a plus de marge basse */
+.bet-row .input-wrapper input {
+  margin-bottom: 0;
+}
+
 /* =========================================
    PARIS SPORTIFS
    ========================================= */

@@ -3,7 +3,7 @@ let currentBjId = null;
 
 function modifyBet(multiplier) {
     if(isBjPlaying) return;
-    let input = document.getElementById('bj-bet');
+    let input = document.getElementById('montant-mise-bj');
     let val = parseFloat(input.value);
     input.value = Math.floor(val * multiplier);
 }
@@ -91,10 +91,13 @@ function toggleActionBtns(disabled) {
 // 1. DISTRIBUER
 // =========================================
 async function startBlackjack() {
-    let bet = parseFloat(document.getElementById('bj-bet').value);
+    let bet = parseFloat(document.getElementById('montant-mise-bj').value);
     let currentGC = parseFloat(document.getElementById('global-balance-gc').innerText);
-    if (isNaN(bet) || bet <= 0 || bet > currentGC) {
-        return alert("Mise invalide ou solde de GoldCoins insuffisant !");
+    let currentFC = parseFloat(document.getElementById('global-balance-fc').innerText);
+    let soldeActuel = typeMonnaieActive === 'GoldCoins' ? currentGC : currentFC;
+
+    if (isNaN(bet) || bet <= 0 || bet > soldeActuel) {
+        return alert("Mise invalide ou solde insuffisant !");
     }
 
     isBjPlaying = true;
@@ -103,8 +106,11 @@ async function startBlackjack() {
     document.getElementById('bj-action-controls').style.display = 'flex';
     toggleActionBtns(true);
     setBjMessage("Distribution...");
-
-    const { data, error } = await client.rpc('bj_demarrer', { p_pseudo: monPseudo, p_mise: bet });
+    const { data, error } = await client.rpc('bj_demarrer', { 
+        p_pseudo: monPseudo, 
+        p_mise: bet,
+        p_monnaie: typeMonnaieActive 
+    });
     
     if (error) {
         alert("Erreur de transaction !");
@@ -167,7 +173,17 @@ async function stand() {
 
     let msg = "";
     let color = "";
-    if (data.status === 'gagne') { msg = `Gagné ! +${data.gain.toFixed(2)} GC`; color = 'var(--accent)'; }
+    let bet = parseFloat(document.getElementById('montant-mise-bj').value);
+
+    if (data.status === 'gagne') {
+        if (typeMonnaieActive === 'GoldCoins') {
+            msg = `Gagné ! +${data.gain.toFixed(2)} GC`;
+        } else {
+            let profit = data.plus_value || (data.gain - bet); 
+            msg = `Gagné ! +${profit.toFixed(2)} GC`;
+        }
+        color = 'var(--accent)';
+    }
     else if (data.status === 'perdu') { msg = "Perdu..."; color = 'var(--red)'; }
     else { msg = "Égalité (Push)"; color = 'var(--text-sec)'; }
 
