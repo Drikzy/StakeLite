@@ -27,6 +27,42 @@ body {
 }
 
 /* =========================================
+   BOUTONS DE CONNEXION / INSCRIPTION
+   ========================================= */
+
+.auth-btn {
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    border: none;
+}
+
+/* Bouton fantôme pour "Se connecter" */
+.login-btn {
+    background: transparent;
+    color: var(--text-main);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.login-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.signup-btn {
+    background: var(--accent);
+    color: #121922;
+}
+
+.signup-btn:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px #007a00;
+}
+
+/* =========================================
         HEADER & MENU UTILISATEUR
    ========================================= */
 header {
@@ -151,13 +187,53 @@ header {
 }
 
 .footer-links a:hover {
-    color: #ffcc00; /* Une couleur qui rappelle les pièces/or */
+    color: var(--accent);
 }
 
 .footer-copy .disclaimer {
     font-size: 0.75rem;
     color: #555;
     margin-top: 10px;
+}
+
+.fc-box {
+    color: #00ccff;
+    border: 1px solid rgba(0, 204, 255, 0.3);
+    background-color: rgba(0, 204, 255, 0.05);
+}
+
+a.fc-box {
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+a.fc-box:hover {
+    transform: translateY(-2px);
+    background-color: rgba(0, 204, 255, 0.15);
+    box-shadow: 0 4px 10px rgba(0, 204, 255, 0.2);
+}
+
+.plus-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background-color: #00ccff;
+    color: #121922;
+    border-radius: 50%;
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 8px;
+    line-height: 1;
+    padding-bottom: 5px;
+    box-sizing: border-box;
+}
+
+.gc-box {
+    color: #ffcc00; 
+    border: 1px solid rgba(255, 204, 0, 0.3);
+    background-color: rgba(255, 204, 0, 0.05);
 }
 
 /* =========================================
@@ -781,4 +857,163 @@ input {
 
 .dropdown-header:hover {
     background-color: var(--bg-cell);
+}
+
+/* =========================================
+        PAGE LEGAL
+   ========================================= */
+
+.legal-container {
+    display: block !important;
+    max-width: 800px !important;
+    margin: 40px auto !important;
+    padding: 30px !important;
+    background-color: var(--bg-main);
+    border-radius: 8px;
+    color: #f0f0f0;
+    text-align: left !important;
+}
+
+.legal-container h2, 
+.legal-container h3, 
+.legal-container p, 
+.legal-container ul {
+    display: block !important;
+    width: 100% !important;
+    float: none !important;
+}
+
+.legal-container h2 {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+
+.legal-container h3 {
+    color: var(--accent);
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.legal-container p, .legal-container ul {
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.legal-container ul {
+    margin-left: 40px;
+}
+
+/* =========================================
+            HISTORIQUE (Profil & Jeux)
+   ========================================= */
+
+.profil-section, 
+.game-history-section {
+    background-color: var(--bg-panel);
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.profil-section h3, 
+.game-history-section h3 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 1.4rem;
+    color: var(--text-main);
+}
+
+#historique-global-container,
+#historique-blackjack-container {
+    overflow-x: auto; 
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.history-table th {
+    background-color: rgba(255, 255, 255, 0.03); 
+    padding: 15px 10px;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    color: #888;
+    border-bottom: 2px solid #2a3441;
+}
+
+.history-table td {
+    padding: 15px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.history-table tbody tr:hover td {
+    background-color: rgba(255, 255, 255, 0.04);
+    cursor: default;
+}
+
+.text-win {
+    color: #00ff66; 
+}
+
+.text-loss {
+    color: #ff4d4d; 
+}
+
+.text-tie {
+    color: #a0a0a0; 
+}
+
+.history-date {
+    color: #666;
+    font-size: 0.8rem;
+}
+
+/* =========================================
+   SECTION EXPLICATION DES JEUX
+   ========================================= */
+
+.explanation-section {
+    background-color: var(--bg-panel);
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+#warning-game {
+    background-color: rgba(255, 153, 0, 0.07);
+    border-left: 4px solid #ff9900;
+    padding: 15px 20px;
+    border-radius: 4px;
+    margin-bottom: 25px;
+}
+
+#warning-game h3 {
+    margin: 0;
+    color: #ff9900;
+    font-size: 0.95rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+#expl-game h3 {
+    color: var(--text-main);
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 1.2rem;
+}
+
+#expl-game p {
+    color: var(--text-sec);
+    line-height: 1.6;
+    font-size: 0.95rem;
+    margin: 0;
 }

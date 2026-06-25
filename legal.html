@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StakeLite - Mentions Légales & Confidentialité</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="favicon.png">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="main.js" defer></script>
+</head>
+<body>
+    <div id="login-overlay" class="overlay">
+        <div class="login-box" style="position: relative;">
+            <span onclick="document.getElementById('login-overlay').classList.remove('active')" style="position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #888;">&times;</span>
+            <h2 id="auth-title">Connexion à StakeLite</h2>
+            
+            <div class="auth-form">
+                <div id="pseudo-group" class="input-group" style="display: none;">
+                    <label>Pseudo</label>
+                    <input type="text" id="auth-pseudo" placeholder="">
+                </div>
+
+                <div class="input-group">
+                    <label>Adresse Email</label>
+                    <input type="email" id="auth-email" placeholder="exemple@mail.com">
+                </div>
+
+                <div class="input-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="auth-password" placeholder="••••••••">
+                </div>
+
+                <button id="auth-main-btn" class="main-btn green" onclick="handleAuth()">SE CONNECTER</button>
+            </div>
+
+            <p class="auth-switch">
+                <span id="auth-switch-text">Pas encore de compte ?</span> 
+                <a href="#" id="auth-switch-link" onclick="toggleAuthMode(event)">S'inscrire</a>
+            </p>
+        </div>
+    </div>
+    <header>
+        <a href="index.html" class="logo" style="text-decoration: none; color: var(--text-main);">STAKE<span>LITE</span></a>
+        
+        <div class="header-right">
+            <div id="guest-menu" style="display: none; gap: 15px; align-items: center;">
+                <button class="auth-btn login-btn" onclick="openAuthModal(true)">Se connecter</button>
+                <button class="auth-btn signup-btn" onclick="openAuthModal(false)">S'inscrire</button>
+            </div>
+
+            <div id="logged-in-menu" style="display: none; gap: 10px; align-items: center;">
+                <div class="balances-container" style="display: flex; gap: 10px; align-items: center;">
+                    <div class="balance-box gc-box">
+                        <span id="global-balance-gc">0.00</span> GC
+                    </div>
+                    <a href="freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center;">
+                        <span id="global-balance-fc">0.00</span> FC
+                        <span class="plus-icon">+</span>
+                    </a>
+                </div>
+                
+                <div class="user-menu">
+                    <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
+                    
+                    <div class="dropdown" id="user-dropdown">
+                        <a href="profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
+                            <div id="dropdown-pseudo">Joueur</div>
+                        </a>
+                        
+                        <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="legal-container">
+        <h2>Mentions Légales & Politique de Confidentialité</h2>
+        <p><em>Date de dernière mise à jour : 22 Juin 2026</em></p>
+
+        <p>Bienvenue sur <strong>StakeLite</strong>. Le présent document a pour but de définir les conditions d'utilisation du site, les mentions légales obligatoires, ainsi que notre politique de gestion des données personnelles et des cookies.</p>
+
+        <h3>1. Mentions Légales</h3>
+        <p>Conformément aux dispositions de l'article 6 III-1 de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique (LCEN), nous vous informons que :</p>
+        <ul>
+            <li><strong>Éditeur du site :</strong> Le site StakeLite est édité par Florian G, développeur indépendant et étudiant.</li>
+            <li><strong>Contact :</strong> adresse e-mail de contact</li>
+            <li><strong>Hébergement :</strong> Le site est hébergé par Vercel Inc, situé à 440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis. L'infrastructure de base de données et d'authentification est fournie par Supabase Inc.</li>
+        </ul>
+
+        <h3>2. Nature du site et Avertissement</h3>
+        <p>StakeLite est un <strong>projet de jeu</strong> axé sur la logique mathématique, les probabilités et le développement web.</p>
+        <ul>
+            <li><strong>Aucun pari en argent réel :</strong> StakeLite n'est pas un site de jeux d'argent réel.</li>
+            <li><strong>Monnaies virtuelles :</strong> Le site utilise un système de monnaies virtuelles fermées : les <strong>GoldCoins (GC)</strong> et les <strong>FreeCoins (FC)</strong>. Ces jetons n'ont aucune valeur légale, fiduciaire ou cryptographique en dehors de la plateforme StakeLite. Ils ne peuvent en aucun cas être achetés avec de l'argent réel.</li>
+        </ul>
+
+        <h3>3. Données Personnelles (RGPD)</h3>
+        <p>Dans le cadre de l'utilisation de StakeLite, nous recueillons un minimum de données strictement nécessaires au bon fonctionnement du service :</p>
+        <ul>
+            <li><strong>Données collectées :</strong> Pseudonyme, adresse e-mail (lors de l'inscription), et l'historique des parties (Pour la prévention de la fraude et la distribution des récompenses).</li>
+            <li><strong>Finalité :</strong> Ces données servent uniquement à sécuriser les comptes, sauvegarder la progression des joueurs et valider les demandes de cartes cadeaux.</li>
+            <li><strong>Vos droits :</strong> Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour exercer ce droit, il vous suffit de nous contacter à l'adresse e-mail mentionnée ci-dessus.</li>
+        </ul>
+
+        <h3>4. Politique de Cookies et Publicité</h3>
+        <p>Afin de financer les coûts d'infrastructure (serveurs, API) et de fournir les récompenses gratuites (FreeCoins), StakeLite affiche des publicités gérées par des régies tierces.</p>
+        <ul>
+            <li><strong>Cookies techniques :</strong> Nécessaires au maintien de votre session.</li>
+            <li><strong>Cookies publicitaires :</strong> Des fournisseurs tiers utilisent des cookies pour diffuser des annonces pertinentes en fonction de vos visites antérieures.</li>
+            <li><strong>Consentement et désactivation :</strong> En utilisant ce site, vous consentez à l'utilisation de ces cookies. Vous pouvez à tout moment configurer votre navigateur pour bloquer les cookies tiers.</li>
+        </ul>
+
+        <h3>5. Conditions du système de récompenses (Boutique)</h3>
+        <p>L'échange de GoldCoins (GC) contre des cartes cadeaux est une fonctionnalité promotionnelle et non un droit financier.</p>
+        <ul>
+            <li>L'éditeur se réserve le droit d'annuler toute transaction ou de bannir un compte en cas de suspicion de fraude, d'utilisation de scripts automatisés, d'exploitation de failles ou de contournement des limites publicitaires journalières (VPN, bloqueurs de publicité modifiés).</li>
+            <li>Les demandes de conversion de GC en cartes cadeaux sont traitées manuellement après audit de l'historique de jeu de l'utilisateur.</li>
+        </ul>
+    </main>
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="legal.html">Mentions Légales & Confidentialité</a>
+                <a href="contact.html">Contact</a>
+                <a href="faq.html">FAQ & Règles</a>
+            </div>
+            <div class="footer-copy">
+                <p>&copy; 2026 StakeLite. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

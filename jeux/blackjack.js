@@ -9,14 +9,21 @@ function modifyBet(multiplier) {
 }
 
 async function syncBalance() {
-    const { data } = await client.from('Joueurs').select('solde').eq('pseudo', monPseudo).single();
+    const { data } = await client
+        .from('Joueurs')
+        .select('"GoldCoins", "FreeCoins"')
+        .eq('pseudo', monPseudo)
+        .single();
+    
     if (data) {
-        balance = data.solde;
-        document.getElementById('global-balance').innerText = balance.toFixed(2);
+        const gcElement = document.getElementById('global-balance-gc');
+        const fcElement = document.getElementById('global-balance-fc');
+        
+        if (gcElement) gcElement.innerText = (data.GoldCoins || 0).toFixed(2);
+        if (fcElement) fcElement.innerText = (data.FreeCoins || 0).toFixed(2);
     }
 }
 
-// 🧮 NOUVELLE FONCTION : Calculer le score pour l'affichage visuel
 function calculateScore(hand) {
     let score = 0;
     let aces = 0;
@@ -85,9 +92,13 @@ function toggleActionBtns(disabled) {
 // =========================================
 async function startBlackjack() {
     let bet = parseFloat(document.getElementById('bj-bet').value);
-    if (isNaN(bet) || bet <= 0 || bet > balance) return alert("Mise invalide ou solde insuffisant");
+    let currentGC = parseFloat(document.getElementById('global-balance-gc').innerText);
+    if (isNaN(bet) || bet <= 0 || bet > currentGC) {
+        return alert("Mise invalide ou solde de GoldCoins insuffisant !");
+    }
 
     isBjPlaying = true;
+    window.isGameActive = true;
     document.getElementById('bj-bet-controls').style.display = 'none';
     document.getElementById('bj-action-controls').style.display = 'flex';
     toggleActionBtns(true);
@@ -98,6 +109,9 @@ async function startBlackjack() {
     if (error) {
         alert("Erreur de transaction !");
         isBjPlaying = false;
+        window.isGameActive = false;
+        document.getElementById('bj-bet-controls').style.display = 'block';
+        document.getElementById('bj-action-controls').style.display = 'none';
         return;
     }
 
@@ -107,8 +121,6 @@ async function startBlackjack() {
     let dHandSafe = parseCards(data.main_croupier);
     
     updateHandsUI(pHandSafe, dHandSafe, true);
-    
-    // 🧮 AFFICHAGE DES SCORES AU LANCEMENT
     document.getElementById('player-score').innerText = `Toi : ${calculateScore(pHandSafe)}`;
     document.getElementById('dealer-score').innerText = `Croupier : ${calculateScore([dHandSafe[0]])}`;
     
@@ -163,7 +175,7 @@ async function stand() {
 }
 
 // =========================================
-// FIN DE PARTIE
+// FIN DE PARTIE 
 // =========================================
 function endBlackjack(msg, winAmount, color, dHandReveal = null, pHand = null) {
     setBjMessage(msg, color);
@@ -174,16 +186,19 @@ function endBlackjack(msg, winAmount, color, dHandReveal = null, pHand = null) {
         dContainer.innerHTML = '';
         dHandReveal.forEach(c => dContainer.appendChild(renderCard(c, false)));
         
-        // 🧮 AFFICHAGE DU SCORE FINAL DU CROUPIER
         document.getElementById('dealer-score').innerText = `Croupier : ${calculateScore(dHandReveal)}`;
     }
     
     isBjPlaying = false;
     currentBjId = null;
+    window.isGameActive = false;
     syncBalance();
+    chargerEtAfficherHistorique('historique-blackjack-container', 'Blackjack');
 
     setTimeout(() => {
         document.getElementById('bj-action-controls').style.display = 'none';
         document.getElementById('bj-bet-controls').style.display = 'block';
     }, 2000);
 }
+
+chargerEtAfficherHistorique('historique-blackjack-container', 'Blackjack');
