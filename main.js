@@ -119,11 +119,6 @@ async function handleAuth() {
             alert("Erreur d'inscription : " + error.message);
             return;
         }
-        monPseudo = pseudo;
-        await client.from('Joueurs').insert([{ 
-            pseudo: monPseudo,
-            auth_id: data.user.id 
-        }]);
         
         console.log("Compte créé avec succès !");
         
