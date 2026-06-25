@@ -89,8 +89,20 @@
                     <button class="m-btn" onclick="setMines(10, this)">10</button>
                 </div>
 
-                <label>Montant de la mise</label>
-                <input type="number" id="bet-amount" value="100" min="1">
+                <div class="mise-container">
+                    <label for="montant-mise" class="mise-label">Montant de la mise</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="montant-mise" value="100" min="1">
+                        
+                        <div class="toggle-container">
+                        <label class="switch-inline">
+                            <input type="checkbox" id="currency-toggle">
+                            <span class="slider-inline round"></span>
+                        </label>
+                        <span id="fc-label" class="fc-text">FC</span>
+                        </div>
+                    </div>
+                </div>
                 
                 <button class="main-btn green" id="play-btn" onclick="startGame()">JOUER</button>
                 <button class="main-btn" id="cashout-btn" onclick="cashout()" style="display: none; background-color: var(--bg-main); color: white; margin-top: 10px;">ENCAISSER</button>

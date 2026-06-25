@@ -51,11 +51,14 @@ function calcMultiplierVisuel() {
 async function startGame() {
     if (isMinesPlaying) return;
     
-    let bet = parseFloat(document.getElementById('bet-amount').value);
+    let bet = parseFloat(document.getElementById('montant-mise').value);
     let currentGC = parseFloat(document.getElementById('global-balance-gc').innerText);
+    let currentFC = parseFloat(document.getElementById('global-balance-fc').innerText);
 
-    if (isNaN(bet) || bet <= 0 || bet > currentGC) {
-        return alert("Mise invalide ou solde de GoldCoins insuffisant !");
+    let soldeActuel = typeMonnaieActive === 'GoldCoins' ? currentGC : currentFC;
+
+    if (isNaN(bet) || bet <= 0 || bet > soldeActuel) {
+        return alert("Mise invalide ou solde insuffisant !");
     }
 
     document.querySelectorAll('.cell').forEach(cell => {
@@ -63,15 +66,16 @@ async function startGame() {
         cell.innerHTML = '';
     });
 
-    document.getElementById('bet-amount').disabled = true;
+    document.getElementById('montant-mise').disabled = true;
     document.getElementById('play-btn').style.display = 'none';
     document.getElementById('cashout-btn').style.display = 'block';
-    document.getElementById('cashout-btn').innerHTML = `ENCAISSER (${bet.toFixed(2)} GC)`;
+    document.getElementById('cashout-btn').innerHTML = `ENCAISSER (${bet.toFixed(2)} ${typeMonnaieActive === 'GoldCoins' ? 'GC' : 'FC'})`;
 
     const { data, error } = await client.rpc('demarrer_mines', {
         p_pseudo: monPseudo,
         p_mise: bet,
-        p_nb_mines: minesCount
+        p_nb_mines: minesCount,
+        p_monnaie: typeMonnaieActive
     });
 
     if (error) {
@@ -111,9 +115,15 @@ async function handleCellClick(index) {
         cell.innerHTML = '💎';
         revealedCount++;
         
-        let bet = parseFloat(document.getElementById('bet-amount').value);
+        let bet = parseFloat(document.getElementById('montant-mise').value);
         let currentGain = bet * calcMultiplierVisuel();
-        document.getElementById('cashout-btn').innerHTML = `ENCAISSER (${currentGain.toFixed(2)} GC)`;
+        
+        if (typeMonnaieActive === 'GoldCoins') {
+            document.getElementById('cashout-btn').innerHTML = `ENCAISSER (${currentGain.toFixed(2)} GC)`;
+        } else {
+            let profit = currentGain - bet;
+            document.getElementById('cashout-btn').innerHTML = `ENCAISSER (+${profit.toFixed(2)} GC)`;
+        }
 
         if (revealedCount === GRID_SIZE - minesCount) {
             cashout(); 
@@ -122,7 +132,7 @@ async function handleCellClick(index) {
 }
 
 // =========================================
-// 3. ENCAISSER
+// 3. ENCAISSER (Totalement sécurisé)
 // =========================================
 async function cashout() {
     if (!isMinesPlaying || !currentPartieId) return;
@@ -133,7 +143,20 @@ async function cashout() {
 
     if (error || data.status === 'erreur') return;
 
-    endMinesGame(`Gagné ! ${data.gain.toFixed(2)} GC`, data.mines);
+    let gainFinal = data.gain;
+    let profit = data.plus_value;
+    let bet = data.mise;
+
+    let msg = "";
+    if (typeMonnaieActive === 'GoldCoins') {
+        msg = `Gagné ! ${gainFinal.toFixed(2)} GC`;
+    } else {
+        msg = profit > 0 
+            ? `Gagné ! +${profit.toFixed(2)} GC\n(Et ta mise de ${bet.toFixed(2)} FC t'a été rendue)` 
+            : `Mise récupérée !`;
+    }
+
+    endMinesGame(msg, data.mines);
     syncBalance(); 
 }
 
@@ -141,7 +164,7 @@ function endMinesGame(msg, minesArray) {
     isMinesPlaying = false;
     window.isGameActive = false;
     currentPartieId = null;
-    document.getElementById('bet-amount').disabled = false;
+    document.getElementById('montant-mise').disabled = false;
     document.getElementById('play-btn').style.display = 'block';
     document.getElementById('cashout-btn').style.display = 'none';
     

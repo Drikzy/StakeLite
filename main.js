@@ -268,4 +268,27 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+// =========================================
+// JEU
+// =========================================
+
+let typeMonnaieActive = 'GoldCoins'; 
+
+const toggleBtn = document.getElementById('currency-toggle');
+const fcLabel = document.getElementById('fc-label');
+
+if (toggleBtn) {
+    toggleBtn.checked = false;
+
+    toggleBtn.addEventListener('change', (e) => {
+      if (e.target.checked) {
+        typeMonnaieActive = 'FreeCoins';
+      } else {
+        typeMonnaieActive = 'GoldCoins';
+      }
+      
+      console.log("Mise en :", typeMonnaieActive);
+    });
+}
+
 checkSession();
