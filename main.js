@@ -3,7 +3,7 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const client = window.supabase.createClient(supabaseUrl, supabaseKey);
 let balance = 0;
 let monPseudo = "";
-let isLoginMode = true; // true = page de connexion, false = page d'inscription
+let isLoginMode = true;
 
 async function checkSession() {
     const { data: { session } } = await client.auth.getSession();
@@ -74,8 +74,6 @@ async function handleAuth() {
             alert("Erreur d'inscription : " + error.message);
             return;
         }
-        monPseudo = pseudo;
-        await client.from('Joueurs').insert([{ pseudo: monPseudo }]);
         
         console.log("Compte créé avec succès !");
         
