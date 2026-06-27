@@ -1,9 +1,5 @@
-/**
- * STAKELITE - Détecteur d'AdBlock
- * Bloque l'accès au jeu si les bannières publicitaires sont masquées.
- */
+window.isAdBlockActive = true;
 
-// 1. Injection automatique du CSS de l'overlay pour éviter de toucher à ton style.css
 const style = document.createElement('style');
 style.innerHTML = `
     #adblock-overlay {
@@ -13,7 +9,7 @@ style.innerHTML = `
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(10, 25, 41, 0.98); /* Fond sombre assorti à StakeLite */
+        background: rgba(10, 25, 41, 0.98);
         z-index: 999999;
         justify-content: center;
         align-items: center;
@@ -43,7 +39,7 @@ style.innerHTML = `
         margin-bottom: 25px;
     }
     .adblock-btn {
-        background-color: #10b981; /* Vert StakeLite */
+        background-color: #10b981;
         color: white;
         border: none;
         padding: 12px 30px;
@@ -59,7 +55,6 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
-// 2. Création et injection de l'overlay HTML dans le DOM dès que le script charge
 window.addEventListener('DOMContentLoaded', () => {
     const overlay = document.createElement('div');
     overlay.id = 'adblock-overlay';
@@ -67,8 +62,8 @@ window.addEventListener('DOMContentLoaded', () => {
         <div class="adblock-box">
             <h2>🛡️ Bloqueur de pub détecté !</h2>
             <p>
-                StakeLite est un projet étudiant entièrement gratuit. Les bannières publicitaires nous permettent de financer les serveurs et de t'offrir tes <strong>FreeCoins (FC)</strong>.<br><br>
-                Pour continuer à jouer et accéder aux grilles, merci de désactiver ton AdBlock/uBlock (ou de couper les boucliers Brave) pour notre site, puis de rafraîchir la page. 🙏
+                StakeLite est un projet entièrement gratuit. Les bannières publicitaires nous permettent de financer les serveurs et de t'offrir tes <strong>FreeCoins (FC)</strong>.<br><br>
+                Pour continuer à jouer, merci de désactiver ton bloqueur (ou de couper les boucliers Brave) pour notre site, puis de rafraîchir la page. 🙏
             </p>
             <button class="adblock-btn" onclick="window.location.reload()">J'AI DÉSACTIVÉ ADBLOCK</button>
         </div>
@@ -76,22 +71,16 @@ window.addEventListener('DOMContentLoaded', () => {
     document.body.appendChild(overlay);
 });
 
-// 3. Script de vérification de la bannière
+const bait = document.createElement('script');
+bait.src = '../ads.js';
+bait.onerror = () => { window.isAdBlockActive = true; };
+document.head.appendChild(bait);
+
 window.addEventListener('load', () => {
-    // On laisse 1.5 seconde à la pub Adsterra pour s'injecter et se charger
     setTimeout(() => {
-        const bannerContainer = document.querySelector('.ad-banner-container');
-        
-        // Détection : On vérifie si la div de la pub a été supprimée, cachée (display:none) ou écrasée à 0px de hauteur
-        if (
-            !bannerContainer || 
-            bannerContainer.offsetHeight === 0 || 
-            window.getComputedStyle(bannerContainer).display === 'none'
-        ) {
-            // AdBlock est actif -> On affiche l'écran de blocage
+        if (window.isAdBlockActive) {
             document.getElementById('adblock-overlay').style.display = 'flex';
             
-            // Sécurité bonus : Désactiver le bouton de jeu principal s'il existe sur la page
             const playBtn = document.getElementById('play-btn');
             if (playBtn) {
                 playBtn.disabled = true;
@@ -99,5 +88,5 @@ window.addEventListener('load', () => {
                 playBtn.style.cursor = 'not-allowed';
             }
         }
-    }, 1500);
+    }, 300);
 });
