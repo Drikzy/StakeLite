@@ -1,3 +1,4 @@
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 let isBjPlaying = false;
 let currentBjId = null;
 
@@ -90,6 +91,7 @@ function toggleActionBtns(disabled) {
 // =========================================
 // 1. DISTRIBUER
 // =========================================
+
 async function startBlackjack() {
     let bet = parseFloat(document.getElementById('montant-mise-bj').value);
     let currentGC = parseFloat(document.getElementById('global-balance-gc').innerText);
@@ -97,7 +99,7 @@ async function startBlackjack() {
     let soldeActuel = typeMonnaieActive === 'GoldCoins' ? currentGC : currentFC;
 
     if (isNaN(bet) || bet <= 0 || bet > soldeActuel) {
-        return alert("Mise invalide ou solde insuffisant !");
+        return showToast("Mise invalide ou solde insuffisant !", "error");
     }
 
     isBjPlaying = true;
@@ -106,6 +108,7 @@ async function startBlackjack() {
     document.getElementById('bj-action-controls').style.display = 'flex';
     toggleActionBtns(true);
     setBjMessage("Distribution...");
+
     const { data, error } = await client.rpc('bj_demarrer', { 
         p_pseudo: monPseudo, 
         p_mise: bet,
@@ -113,7 +116,7 @@ async function startBlackjack() {
     });
     
     if (error) {
-        alert("Erreur de transaction !");
+        showToast("Erreur de transaction !", "error");
         isBjPlaying = false;
         window.isGameActive = false;
         document.getElementById('bj-bet-controls').style.display = 'block';
@@ -126,9 +129,27 @@ async function startBlackjack() {
     let pHandSafe = parseCards(data.main_joueur);
     let dHandSafe = parseCards(data.main_croupier);
     
-    updateHandsUI(pHandSafe, dHandSafe, true);
-    document.getElementById('player-score').innerText = `Toi : ${calculateScore(pHandSafe)}`;
+    let pContainer = document.getElementById('player-hand');
+    let dContainer = document.getElementById('dealer-hand');
+    pContainer.innerHTML = ''; 
+    dContainer.innerHTML = '';
+    
+    document.getElementById('player-score').innerText = `Toi : 0`;
+    document.getElementById('dealer-score').innerText = `Croupier : 0`;
+
+    pContainer.appendChild(renderCard(pHandSafe[0]));
+    document.getElementById('player-score').innerText = `Toi : ${calculateScore([pHandSafe[0]])}`;
+    await wait(600);
+
+    dContainer.appendChild(renderCard(dHandSafe[0]));
     document.getElementById('dealer-score').innerText = `Croupier : ${calculateScore([dHandSafe[0]])}`;
+    await wait(600);
+
+    pContainer.appendChild(renderCard(pHandSafe[1]));
+    document.getElementById('player-score').innerText = `Toi : ${calculateScore(pHandSafe)}`;
+    await wait(600);
+
+    dContainer.appendChild(renderCard(dHandSafe[1], true));
     
     syncBalance(); 
     toggleActionBtns(false);
@@ -171,6 +192,17 @@ async function stand() {
     const { data, error } = await client.rpc('bj_stand', { p_id: currentBjId });
     if (error || data.status === 'erreur') { toggleActionBtns(false); return; }
 
+    let dHandReveal = parseCards(data.main_croupier);
+    let dContainer = document.getElementById('dealer-hand');
+    
+    dContainer.innerHTML = '';
+    
+    for (let i = 0; i < dHandReveal.length; i++) {
+        dContainer.appendChild(renderCard(dHandReveal[i], false));
+        document.getElementById('dealer-score').innerText = `Croupier : ${calculateScore(dHandReveal.slice(0, i + 1))}`;
+        await wait(800);
+    }
+
     let msg = "";
     let color = "";
     let bet = parseFloat(document.getElementById('montant-mise-bj').value);
@@ -184,10 +216,16 @@ async function stand() {
         }
         color = 'var(--accent)';
     }
-    else if (data.status === 'perdu') { msg = "Perdu..."; color = 'var(--red)'; }
-    else { msg = "Égalité (Push)"; color = 'var(--text-sec)'; }
+    else if (data.status === 'perdu') { 
+        msg = "Perdu..."; 
+        color = 'var(--red)'; 
+    }
+    else { 
+        msg = "Égalité (Push)"; 
+        color = 'var(--text-sec)'; 
+    }
 
-    endBlackjack(msg, data.gain, color, data.main_croupier);
+    endBlackjack(msg, data.gain, color);
 }
 
 // =========================================

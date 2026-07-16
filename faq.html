@@ -50,35 +50,65 @@
                 <button class="auth-btn signup-btn" onclick="openAuthModal(false)">S'inscrire</button>
             </div>
 
-            <div id="logged-in-menu" style="display: none; gap: 10px; align-items: center;">
-                <div class="balances-container" style="display: flex; gap: 10px; align-items: center;">
-                    <div class="balance-box gc-box">
-                        <span id="global-balance-gc">0.00</span> GC
+            <div id="logged-in-menu" style="display: none; align-items: center;">
+                    <div class="user-menu" style="display: flex; align-items: center; gap: 15px; position: relative;">
+                        <div class="balances-container" id="balances-menu">
+                            <a href="boutique.html" class="balance-box gc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-gc">0.00</span> 
+                                <span>GC</span>
+                            </a>
+                            <a href="freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-fc">0.00</span> 
+                                <span>FC</span>
+                                <span class="plus-icon">+</span>
+                            </a>
+                        </div>
+                        <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
+                        <div class="dropdown" id="user-dropdown">
+                            <a href="profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
+                                <div id="dropdown-pseudo">Joueur</div>
+                            </a>
+                            <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
+                        </div>
                     </div>
-                    <a href="freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center;">
-                        <span id="global-balance-fc">0.00</span> FC
-                        <span class="plus-icon">+</span>
-                    </a>
-                </div>
-                
-                <div class="user-menu">
-                    <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
-                    
-                    <div class="dropdown" id="user-dropdown">
-                        <a href="profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
-                            <div id="dropdown-pseudo">Joueur</div>
-                        </a>
-                        
-                        <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
-                    </div>
-                </div>
             </div>
         </div>
     </header>
     <main class="legal-container">
-        <h2>FAQ</h2>
-        <p>Rien d'intéressant pour le moment...</p>
+        <h2>Foire Aux Questions</h2>
+        <p>Vous avez des questions sur le fonctionnement de StakeLite ? Retrouvez toutes les réponses ici. Si vous ne trouvez pas ce que vous cherchez, n'hésitez pas à nous rejoindre sur Discord !</p>
 
+        <div class="faq-item" style="margin-top: 30px;">
+            <h3 style="color: var(--accent); margin-bottom: 10px;">Qu'est-ce que StakeLite ?</h3>
+            <p style="margin-bottom: 20px;">StakeLite est une plateforme de mini-jeux de logique et de probabilités 100 % gratuite. Notre objectif est de proposer une expérience de divertissement amusante où les joueurs peuvent tester leurs stratégies (sur les Mines ou le Blackjack) et accumuler des récompenses virtuelles, le tout sans aucun risque financier.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3 style="color: var(--accent); margin-bottom: 10px;">Dois-je déposer de l'argent réel pour jouer ?</h3>
+            <p style="margin-bottom: 20px;"><strong>Absolument jamais.</strong> StakeLite n'est pas un site de jeux d'argent. Il est techniquement impossible de lier une carte bancaire ou de faire un dépôt sur notre site. Le modèle économique de StakeLite repose entièrement sur les revenus publicitaires générés par l'affichage des bannières lors de votre navigation. Vous ne pouvez pas perdre un seul centime sur cette plateforme.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3 style="color: var(--accent); margin-bottom: 10px;">Quelle est la différence entre les GoldCoins (GC) et les FreeCoins (FC) ?</h3>
+            <p style="margin-bottom: 20px;">Pour séparer le jeu gratuit des récompenses, nous utilisons deux monnaies virtuelles distinctes :
+            <br>• <strong>Les FreeCoins (FC) :</strong> C'est la monnaie "pour le fun". Elle vous permet de jouer, de tester des stratégies et de vous amuser sans limite.
+            <br>• <strong>Les GoldCoins (GC) :</strong> C'est notre monnaie premium gratuite. Ces jetons sont plus rares et peuvent être échangés contre des récompenses réelles dans notre boutique.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3 style="color: var(--accent); margin-bottom: 10px;">Comment obtenir des cartes cadeaux avec mes GoldCoins ?</h3>
+            <p style="margin-bottom: 20px;">Lorsque vous accumulez suffisamment de GoldCoins (GC) en jouant ou en participant à nos événements, vous pouvez formuler une demande d'échange contre des cartes cadeaux (Amazon, Fnac, etc.). Chaque demande est vérifiée manuellement par notre équipe pour s'assurer qu'aucun script de triche n'a été utilisé. Une fois validée, la carte cadeau vous est envoyée par e-mail.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3 style="color: var(--accent); margin-bottom: 10px;">Je n'ai plus de FreeCoins, comment en récupérer ?</h3>
+            <p style="margin-bottom: 20px;">C'est très simple ! Rendez-vous dans la section "Missions & Récompenses" (en cliquant sur votre solde FC en haut de l'écran). Vous pourrez recharger instantanément votre solde de FreeCoins en accomplissant de petites missions gratuites ou en visionnant de courtes annonces publicitaires de nos partenaires.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3 style="color: var(--accent); margin-bottom: 10px;">Les jeux sont-ils équitables ?</h3>
+            <p style="margin-bottom: 20px;">Oui. Nos algorithmes sont basés sur des calculs de probabilités mathématiques stricts. Par exemple, au jeu des Mines, l'emplacement des bombes est généré de manière totalement aléatoire à chaque début de partie. StakeLite applique une légère marge mathématique (le "House Edge") pour équilibrer l'économie virtuelle du site, mais vos chances de victoire restent conformes aux lois des probabilités.</p>
+        </div>
     </main>
 
     <footer class="site-footer">
@@ -86,7 +116,7 @@
             <div class="footer-links">
                 <a href="legal.html">Mentions Légales & Confidentialité</a>
                 <a href="contact.html">Contact</a>
-                <a href="faq.html">FAQ & Règles</a>
+                <a href="faq.html">FAQ</a>
             </div>
             <div class="footer-copy">
                 <p>&copy; 2026 StakeLite. Tous droits réservés.</p>

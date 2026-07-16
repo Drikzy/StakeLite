@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../style.css">
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="../main.js" defer></script>
     <script src="blackjack.js" defer></script>
 </head>
@@ -51,28 +52,27 @@
                 <button class="auth-btn signup-btn" onclick="openAuthModal(false)">S'inscrire</button>
             </div>
 
-            <div id="logged-in-menu" style="display: none; gap: 10px; align-items: center;">
-                <div class="balances-container" style="display: flex; gap: 10px; align-items: center;">
-                    <div class="balance-box gc-box">
-                        <span id="global-balance-gc">0.00</span> GC
+            <div id="logged-in-menu" style="display: none; align-items: center;">
+                    <div class="user-menu" style="display: flex; align-items: center; gap: 15px; position: relative;">
+                        <div class="balances-container" id="balances-menu">
+                            <a href="boutique.html" class="balance-box gc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-gc">0.00</span> 
+                                <span>GC</span>
+                            </a>
+                            <a href="freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-fc">0.00</span> 
+                                <span>FC</span>
+                                <span class="plus-icon">+</span>
+                            </a>
+                        </div>
+                        <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
+                        <div class="dropdown" id="user-dropdown">
+                            <a href="profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
+                                <div id="dropdown-pseudo">Joueur</div>
+                            </a>
+                            <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
+                        </div>
                     </div>
-                    <a href="../freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center;">
-                        <span id="global-balance-fc">0.00</span> FC
-                        <span class="plus-icon">+</span>
-                    </a>
-                </div>
-                
-                <div class="user-menu">
-                    <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
-                    
-                    <div class="dropdown" id="user-dropdown">
-                        <a href="../profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
-                            <div id="dropdown-pseudo">Joueur</div>
-                        </a>
-                        
-                        <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
-                    </div>
-                </div>
             </div>
         </div>
     </header>
@@ -84,18 +84,6 @@
             </span>
 
             <div class="ad-banner-container" style="border: 1px solid #334155; border-radius: 8px; padding: 10px; background: #0f172a; display: flex; justify-content: center; align-items: center; min-height: 90px; width: 728px; max-width: 100%; box-sizing: border-box;">
-                
-                <script type="text/javascript">
-                    atOptions = {
-                        'key' : '0e19bfd8a6f17aad931d71154c67ad57',
-                        'format' : 'iframe',
-                        'height' : 90,
-                        'width' : 728,
-                        'params' : {}
-                    };
-                </script>
-                <script type="text/javascript" src="https://www.highperformanceformat.com/0e19bfd8a6f17aad931d71154c67ad57/invoke.js"></script>
-                
             </div>
         </div>
         <section id="blackjack-section" class="game-section active">
@@ -148,9 +136,13 @@
         <div id="expl-game">
             <h3>Règles du Blackjack</h3>
             <p>
-                L'objectif est de battre le croupier en obtenant un score le plus proche possible de 21, sans jamais le dépasser. 
-                Les cartes de 2 à 10 valent leur valeur nominale. Les têtes (Valet, Dame, Roi) valent 10 points. L'As vaut 1 ou 11 points, au choix du joueur.
+                Affronte le croupier dans un duel psychologique où chaque carte compte. <br><strong>Ton objectif ?</strong> Obtenir un score aussi proche que possible de 21 sans jamais dépasser cette limite. Chaque décision, tirer une carte, rester, ou doubler, peut faire basculer la partie. Analyse les probabilités, garde ton sang-froid et fais sauter la banque dans cette expérience de Blackjack fluide et immersive. 
+                <br>Au Blackjack, les gains sont déterminés de manière très précise selon le scénario de fin de partie. Une victoire standard, obtenue en ayant un meilleur score que le croupier sans dépasser 21, offre un rapport de 1:1, ce qui signifie que tu récupères ta mise en plus d'un montant équivalent en bénéfice. 
+                Le gain ultime reste le Blackjack naturel (un As et une tête dès la distribution initiale), payé à un taux avantageux de 3:2, soit 1,5 fois ta mise de départ. 
+                En cas d'égalité parfaite des scores, la situation est appelée un "Push": il n'y a aucun gagnant, le casino ne prend rien et ta mise t'est intégralement rendue. En revanche, si tu dépasses 21, ou si le croupier obtient un meilleur score, la mise est définitivement perdue. <br><br>
             </p>
+            <h3>Règle du croupier</h3>
+            <p>Au Blackjack, le croupier est obligé de tirer une carte jusqu'à atteindre au moins 17. <br>Utilise cette information pour décider quand rester ou tirer !</p>
         </div>
     </section>
     <div class="game-history-section">
@@ -162,27 +154,34 @@
             📢 Contenu Sponsorisé - Publicité
         </span>
         <div class="ad-banner-container" style="border: 1px solid #334155; border-radius: 8px; padding: 8px; background: #0f172a; display: flex; justify-content: center; align-items: center; min-height: 50px; width: 320px; max-width: 100%; box-sizing: border-box;">
-            
-            <script>
-            atOptions = {
-                'key' : '9bfa117a1926fb65b7a4088b98d44b52',
-                'format' : 'iframe',
-                'height' : 50,
-                'width' : 320,
-                'params' : {}
-            };
-            </script>
-            <script src="https://www.highperformanceformat.com/9bfa117a1926fb65b7a4088b98d44b52/invoke.js"></script>
         </div>
     </div>
     
+    <div id="win-modal" class="win-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(8, 15, 26, 0.6); z-index: 99999; justify-content: center; align-items: center; backdrop-filter: blur(4px); opacity: 0; transition: opacity 0.3s ease;">
+        <div class="win-box" style="background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.85) 100%); border: 2px solid rgba(16, 185, 129, 0.8); border-radius: 20px; padding: 40px; text-align: center; max-width: 420px; width: 90%; box-shadow: 0 0 40px rgba(16, 185, 129, 0.25); transform: translateY(-50px) scale(0.9); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); backdrop-filter: blur(10px);">
+            <div class="win-icon" style="font-size: 60px; margin-bottom: 15px; display: inline-block; animation: pulseGlow 2s infinite alternate;">💰</div>
+            <h2 style="color: #10b981; font-size: 32px; font-weight: 800; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);">BIEN JOUÉ !</h2>
+            <p style="color: #cbd5e1; font-size: 15px; margin: 0 0 25px 0; font-weight: 500;">Tu as mis la main sur un joli magot :</p>
+            <div id="win-amount" style="font-size: 40px; font-weight: 900; color: #fff; margin-bottom: 30px; background: rgba(15, 23, 42, 0.5); padding: 20px; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.3); box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);">
+                +0.00 <span style="color: #10b981;">GC</span>
+            </div>
+            <button class="adblock-btn" onclick="closeWinModal()" style="width: 100%; padding: 16px; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border-radius: 8px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); transition: transform 0.2s, background 0.2s; background-color: #10b981; color: white; border: none; cursor: pointer;">Encaisser les gains</button>
+        </div>
+    </div>
+    
+    <style>
+    @keyframes pulseGlow {
+        from { transform: scale(1); filter: drop-shadow(0 0 5px rgba(16, 185, 129, 0.5)); }
+        to { transform: scale(1.1); filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.9)); }
+    }
+    </style>
 </body>
 <footer class="site-footer">
     <div class="footer-content">
         <div class="footer-links">
             <a href="../legal.html">Mentions Légales & Confidentialité</a>
             <a href="../contact.html">Contact</a>
-            <a href="../faq.html">FAQ & Règles</a>
+            <a href="../faq.html">FAQ</a>
         </div>
         <div class="footer-copy">
             <p>&copy; 2026 StakeLite. Tous droits réservés.</p>

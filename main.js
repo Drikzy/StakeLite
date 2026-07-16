@@ -151,6 +151,8 @@ async function logout() {
 
 function toggleUserMenu() {
     document.getElementById('user-dropdown').classList.toggle('active');
+    const balancesMenu = document.getElementById('balances-menu');
+    if(balancesMenu) balancesMenu.classList.toggle('active-mobile');
 }
 
 // =========================================
@@ -290,5 +292,38 @@ if (toggleBtn) {
       console.log("Mise en :", typeMonnaieActive);
     });
 }
+
+function recolterBonus() {
+    alert("Félicitations ! 100 FC ont été ajoutés à votre compte (Bonus Journalier).");
+}
+
+function copierLienParrainage(bouton) {
+    navigator.clipboard.writeText("https://stakelite.fr").then(() => {
+        const texteOriginal = bouton.innerText;
+        bouton.innerText = "Copié ! ✅";
+        bouton.style.color = "var(--accent)";
+        bouton.style.borderColor = "var(--accent)";
+        
+        setTimeout(() => {
+            bouton.innerText = texteOriginal;
+            bouton.style.color = "";
+            bouton.style.borderColor = "";
+        }, 2000);
+        
+    }).catch(err => {
+        console.error("Erreur lors de la copie : ", err);
+        alert("Impossible de copier le lien automatiquement.");
+    });
+}
+
+document.addEventListener('click', (event) => {
+    const userMenu = document.querySelector('.user-menu');
+    // Si on clique en dehors du menu, on le ferme
+    if (userMenu && !userMenu.contains(event.target)) {
+        document.getElementById('user-dropdown').classList.remove('active');
+        const balancesMenu = document.getElementById('balances-menu');
+        if(balancesMenu) balancesMenu.classList.remove('active-mobile');
+    }
+});
 
 checkSession();

@@ -50,28 +50,27 @@
                 <button class="auth-btn signup-btn" onclick="openAuthModal(false)">S'inscrire</button>
             </div>
 
-            <div id="logged-in-menu" style="display: none; gap: 10px; align-items: center;">
-                <div class="balances-container" style="display: flex; gap: 10px; align-items: center;">
-                    <div class="balance-box gc-box">
-                        <span id="global-balance-gc">0.00</span> GC
+            <div id="logged-in-menu" style="display: none; align-items: center;">
+                    <div class="user-menu" style="display: flex; align-items: center; gap: 15px; position: relative;">
+                        <div class="balances-container" id="balances-menu">
+                            <a href="boutique.html" class="balance-box gc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-gc">0.00</span> 
+                                <span>GC</span>
+                            </a>
+                            <a href="freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-fc">0.00</span> 
+                                <span>FC</span>
+                                <span class="plus-icon">+</span>
+                            </a>
+                        </div>
+                        <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
+                        <div class="dropdown" id="user-dropdown">
+                            <a href="profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
+                                <div id="dropdown-pseudo">Joueur</div>
+                            </a>
+                            <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
+                        </div>
                     </div>
-                    <a href="freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center;">
-                        <span id="global-balance-fc">0.00</span> FC
-                        <span class="plus-icon">+</span>
-                    </a>
-                </div>
-                
-                <div class="user-menu">
-                    <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
-                    
-                    <div class="dropdown" id="user-dropdown">
-                        <a href="profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
-                            <div id="dropdown-pseudo">Joueur</div>
-                        </a>
-                        
-                        <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
-                    </div>
-                </div>
             </div>
         </div>
     </header>
@@ -86,7 +85,7 @@
         <ul>
             <li><strong>Éditeur du site :</strong> Le site StakeLite est édité par Florian G, développeur indépendant et étudiant.</li>
             <li><strong>Contact :</strong> adresse e-mail de contact</li>
-            <li><strong>Hébergement :</strong> Le site est hébergé par Vercel Inc, situé à 440 N Barranca Avenue #4133, Covina, CA 91723, États-Unis. L'infrastructure de base de données et d'authentification est fournie par Supabase Inc.</li>
+            <li><strong>Hébergement :</strong> Le site est hébergé par Netlify, située au 512 2nd Street, Suite 200, San Francisco, CA 94107, États-Unis. L'infrastructure de base de données et d'authentification est fournie par Supabase Inc.</li>
         </ul>
 
         <h3>2. Nature du site et Avertissement</h3>
@@ -124,7 +123,7 @@
             <div class="footer-links">
                 <a href="legal.html">Mentions Légales & Confidentialité</a>
                 <a href="contact.html">Contact</a>
-                <a href="faq.html">FAQ & Règles</a>
+                <a href="faq.html">FAQ</a>
             </div>
             <div class="footer-copy">
                 <p>&copy; 2026 StakeLite. Tous droits réservés.</p>

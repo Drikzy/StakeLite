@@ -58,7 +58,8 @@ async function startGame() {
     let soldeActuel = typeMonnaieActive === 'GoldCoins' ? currentGC : currentFC;
 
     if (isNaN(bet) || bet <= 0 || bet > soldeActuel) {
-        return alert("Mise invalide ou solde insuffisant !");
+        showToast("Mise invalide ou solde insuffisant !", "error");
+        return;
     }
 
     document.querySelectorAll('.cell').forEach(cell => {
@@ -79,7 +80,7 @@ async function startGame() {
     });
 
     if (error) {
-        alert("Erreur de transaction !");
+        showToast("Erreur de transaction !", "error");
         return;
     }
 
@@ -109,7 +110,7 @@ async function handleCellClick(index) {
     if (data.status === 'boum') {
         cell.classList.add('revealed-mine');
         cell.innerHTML = '💣';
-        endMinesGame("Perdu !", data.mines);
+        endMinesGame("Boom ! Tu as touché une mine 💥", data.mines);
     } else if (data.status === 'diamant') {
         cell.classList.add('revealed-diamond');
         cell.innerHTML = '💎';
@@ -145,19 +146,17 @@ async function cashout() {
 
     let gainFinal = data.gain;
     let profit = data.plus_value;
-    let bet = data.mise;
-
-    let msg = "";
-    if (typeMonnaieActive === 'GoldCoins') {
-        msg = `Gagné ! ${gainFinal.toFixed(2)} GC`;
-    } else {
-        msg = profit > 0 
-            ? `Gagné ! +${profit.toFixed(2)} GC\n(Et ta mise de ${bet.toFixed(2)} FC t'a été rendue)` 
-            : `Mise récupérée !`;
-    }
-
-    endMinesGame(msg, data.mines);
+    
+    endMinesGame(null, data.mines);
     syncBalance(); 
+
+    let montantAAfficher = typeMonnaieActive === 'GoldCoins' ? gainFinal : profit;
+    
+    if (montantAAfficher > 0) {
+        showWinModal(montantAAfficher, 'GC');
+    } else {
+        showToast("Mise récupérée !", "info");
+    }
 }
 
 function endMinesGame(msg, minesArray) {
@@ -177,9 +176,87 @@ function endMinesGame(msg, minesArray) {
             }
         });
     }
-    chargerEtAfficherHistorique('historique-mines-container', 'Mines');
     
-    setTimeout(() => alert(msg), 100);
+    if (msg) {
+        showToast(msg, "error");
+    }
+
+    chargerEtAfficherHistorique('historique-mines-container', 'Mines');
+}
+
+// =========================================
+// 4. GESTION DE LA POP-UP DE VICTOIRE
+// =========================================
+function showWinModal(amount, currency) {
+    const modal = document.getElementById('win-modal');
+    const winAmountDiv = document.getElementById('win-amount');
+    const winBox = modal.querySelector('.win-box');
+    
+    winAmountDiv.innerHTML = `+${amount.toFixed(2)} <span style="color: #10b981; font-weight: 700;">${currency}</span>`;
+    
+    modal.style.display = 'flex';
+    setTimeout(() => {
+        modal.style.opacity = '1';
+        winBox.style.transform = 'translateY(0) scale(1)';
+    }, 10);
+
+    if (typeof confetti === 'function') {
+        confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 }, zIndex: 100000 });
+        setTimeout(() => confetti({ particleCount: 50, angle: 60, spread: 55, origin: { x: 0, y: 0.9 }, zIndex: 100000 }), 100);
+        setTimeout(() => confetti({ particleCount: 50, angle: 120, spread: 55, origin: { x: 1, y: 0.9 }, zIndex: 100000 }), 200);
+    }
+}
+
+function closeWinModal() {
+    const modal = document.getElementById('win-modal');
+    const winBox = modal.querySelector('.win-box');
+    
+    modal.style.opacity = '0';
+    winBox.style.transform = 'translateY(30px) scale(0.9)';
+    
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 300);
+}
+
+// =========================================
+// 5. SYSTÈME DE NOTIFICATIONS (TOASTS)
+// =========================================
+function showToast(message, type = 'error') {
+    // Création dynamique de l'élément de notification
+    const toast = document.createElement('div');
+    toast.innerHTML = type === 'error' ? `⚠️ ${message}` : `ℹ️ ${message}`;
+    
+    // Style de la notification (centrée en bas)
+    toast.style.position = 'fixed';
+    toast.style.bottom = '30px';
+    toast.style.left = '50%';
+    toast.style.transform = 'translateX(-50%) translateY(50px)'; // Démarrage plus bas pour l'animation
+    toast.style.backgroundColor = type === 'error' ? '#ef4444' : '#3b82f6';
+    toast.style.color = '#fff';
+    toast.style.padding = '12px 24px';
+    toast.style.borderRadius = '8px';
+    toast.style.fontWeight = 'bold';
+    toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.4)';
+    toast.style.zIndex = '999999';
+    toast.style.opacity = '0';
+    toast.style.transition = 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+    toast.style.pointerEvents = 'none'; // Empêche de bloquer les clics en dessous
+
+    document.body.appendChild(toast);
+
+    // Animation d'entrée
+    setTimeout(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+    }, 10);
+
+    // Animation de sortie et suppression du DOM
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(20px)';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }
 
 setTimeout(() => {

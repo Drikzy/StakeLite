@@ -50,28 +50,27 @@
                 <button class="auth-btn signup-btn" onclick="openAuthModal(false)">S'inscrire</button>
             </div>
 
-            <div id="logged-in-menu" style="display: none; gap: 10px; align-items: center;">
-                <div class="balances-container" style="display: flex; gap: 10px; align-items: center;">
-                    <div class="balance-box gc-box">
-                        <span id="global-balance-gc">0.00</span> GC
+            <div id="logged-in-menu" style="display: none; align-items: center;">
+                    <div class="user-menu" style="display: flex; align-items: center; gap: 15px; position: relative;">
+                        <div class="balances-container" id="balances-menu">
+                            <a href="boutique.html" class="balance-box gc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-gc">0.00</span> 
+                                <span>GC</span>
+                            </a>
+                            <a href="freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-fc">0.00</span> 
+                                <span>FC</span>
+                                <span class="plus-icon">+</span>
+                            </a>
+                        </div>
+                        <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
+                        <div class="dropdown" id="user-dropdown">
+                            <a href="profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
+                                <div id="dropdown-pseudo">Joueur</div>
+                            </a>
+                            <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
+                        </div>
                     </div>
-                    <a href="freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center;">
-                        <span id="global-balance-fc">0.00</span> FC
-                        <span class="plus-icon">+</span>
-                    </a>
-                </div>
-                
-                <div class="user-menu">
-                    <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
-                    
-                    <div class="dropdown" id="user-dropdown">
-                        <a href="profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
-                            <div id="dropdown-pseudo">Joueur</div>
-                        </a>
-                        
-                        <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
-                    </div>
-                </div>
             </div>
         </div>
     </header>
@@ -79,15 +78,42 @@
     <main style="padding-top: 50px;">
         <div class="profil-section" style="text-align: center;">
             <h2 style="color: #00ccff; margin-bottom: 10px;">Récompenses Gratuites</h2>
-            <p style="color: #888; margin-bottom: 30px;">Accomplis des missions ou regarde des publicités pour recharger tes FreeCoins !</p>
+            <p style="color: #888; margin-bottom: 30px;">Accomplis des quêtes pour recharger instantanément tes FreeCoins !</p>
             
-            <div style="background: rgba(255,255,255,0.02); border: 1px dashed #333; border-radius: 8px; padding: 40px;">
-                <h3 style="color: var(--text-main);">[ ZONE DE MISSIONS ]</h3>
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid #222; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+                <h3 style="font-size: 1.1rem; margin-bottom: 10px;">🎁 Bonus Quotidien</h3>
+                <p style="color: var(--text-sec); font-size: 0.9rem; margin-bottom: 15px;">Reviens chaque jour pour récupérer tes crédits gratuits.</p>
+                <button class="main-btn green" style="width: auto; padding: 10px 25px;" onclick="recolterBonus()">
+                    Réclamer +100 FC
+                </button>
             </div>
-            
-            <button class="main-btn" style="margin-top: 20px; background: #00ccff; color: #111;" disabled>
-                Récupérer la récompense du jour (Bientôt)
-            </button>
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid #222; border-radius: 8px; padding: 25px; text-align: left;">
+                <h3 style="color: var(--text-main); text-align: center; margin-bottom: 20px; font-size: 1.2rem;">🎯 Quêtes Disponibles</h3>
+                
+                <div class="game-card" style="width: 100%; padding: 15px; margin-bottom: 15px; flex-direction: row; justify-content: space-between; gap: 10px;">
+                    <div style="text-align: left;">
+                        <h4 style="margin-bottom: 5px;">Rejoindre le Discord</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-sec);">Intègre notre communauté et valide ton pseudo.</p>
+                    </div>
+                    <a href="https://discord.gg/q3aMZBD5b5" target="_blank" rel="noopener" class="auth-btn signup-btn" style="text-decoration: none; text-align: center; min-width: 120px;">+500 FC</a>
+                </div>
+
+                <div class="game-card" style="width: 100%; padding: 15px; margin-bottom: 15px; flex-direction: row; justify-content: space-between; gap: 10px;">
+                    <div style="text-align: left;">
+                        <h4 style="margin-bottom: 5px;">Suivre notre actualité</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-sec);">Découvre les coulisses du développement du site.</p>
+                    </div>
+                    <a href="https://discord.gg/q3aMZBD5b5" target="_blank" rel="noopener" class="auth-btn signup-btn" style="text-decoration: none; text-align: center; min-width: 120px;">+250 FC</a>
+                </div>
+
+                <div class="game-card" style="width: 100%; padding: 15px; flex-direction: row; justify-content: space-between; gap: 10px;">
+                    <div style="text-align: left;">
+                        <h4 style="margin-bottom: 5px;">Inviter un ami</h4>
+                        <p style="font-size: 0.85rem; color: var(--text-sec);">Partage ton lien unique avec tes potes</p>
+                    </div>
+                    <button class="auth-btn login-btn" onclick="copierLienParrainage(this)" style="min-width: 120px;">Partager</button>
+                </div>
+            </div>
         </div>
     </main>
 

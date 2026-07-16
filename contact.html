@@ -50,41 +50,43 @@
                 <button class="auth-btn signup-btn" onclick="openAuthModal(false)">S'inscrire</button>
             </div>
 
-            <div id="logged-in-menu" style="display: none; gap: 10px; align-items: center;">
-                <div class="balances-container" style="display: flex; gap: 10px; align-items: center;">
-                    <div class="balance-box gc-box">
-                        <span id="global-balance-gc">0.00</span> GC
+            <div id="logged-in-menu" style="display: none; align-items: center;">
+                    <div class="user-menu" style="display: flex; align-items: center; gap: 15px; position: relative;">
+                        <div class="balances-container" id="balances-menu">
+                            <a href="boutique.html" class="balance-box gc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-gc">0.00</span> 
+                                <span>GC</span>
+                            </a>
+                            <a href="freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-fc">0.00</span> 
+                                <span>FC</span>
+                                <span class="plus-icon">+</span>
+                            </a>
+                        </div>
+                        <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
+                        <div class="dropdown" id="user-dropdown">
+                            <a href="profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
+                                <div id="dropdown-pseudo">Joueur</div>
+                            </a>
+                            <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
+                        </div>
                     </div>
-                    <a href="freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center;">
-                        <span id="global-balance-fc">0.00</span> FC
-                        <span class="plus-icon">+</span>
-                    </a>
-                </div>
-                
-                <div class="user-menu">
-                    <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
-                    
-                    <div class="dropdown" id="user-dropdown">
-                        <a href="profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
-                            <div id="dropdown-pseudo">Joueur</div>
-                        </a>
-                        
-                        <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
-                    </div>
-                </div>
             </div>
         </div>
     </header>
     <main class="legal-container">
         <h2>Contact</h2>
-        <p>Rien d'intéressant pour le moment...</p>
+        <p class="discord-text">
+            Rejoignez-nous sur notre <a href="https://discord.gg/q3aMZBD5b5" class="link-discord" target="_blank" rel="noopener">Discord</a>
+            <br><br><strong>Mail: </strong>florian.pro0234@gmail.com
+        </p>
     </main>
     <footer class="site-footer">
         <div class="footer-content">
             <div class="footer-links">
                 <a href="legal.html">Mentions Légales & Confidentialité</a>
                 <a href="contact.html">Contact</a>
-                <a href="faq.html">FAQ & Règles</a>
+                <a href="faq.html">FAQ</a>
             </div>
             <div class="footer-copy">
                 <p>&copy; 2026 StakeLite. Tous droits réservés.</p>

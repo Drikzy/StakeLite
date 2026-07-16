@@ -50,28 +50,27 @@
                 <button class="auth-btn signup-btn" onclick="openAuthModal(false)">S'inscrire</button>
             </div>
 
-            <div id="logged-in-menu" style="display: none; gap: 10px; align-items: center;">
-                <div class="balances-container" style="display: flex; gap: 10px; align-items: center;">
-                    <div class="balance-box gc-box">
-                        <span id="global-balance-gc">0.00</span> GC
+            <div id="logged-in-menu" style="display: none; align-items: center;">
+                    <div class="user-menu" style="display: flex; align-items: center; gap: 15px; position: relative;">
+                        <div class="balances-container" id="balances-menu">
+                            <a href="boutique.html" class="balance-box gc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-gc">0.00</span> 
+                                <span>GC</span>
+                            </a>
+                            <a href="freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-fc">0.00</span> 
+                                <span>FC</span>
+                                <span class="plus-icon">+</span>
+                            </a>
+                        </div>
+                        <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
+                        <div class="dropdown" id="user-dropdown">
+                            <a href="profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
+                                <div id="dropdown-pseudo">Joueur</div>
+                            </a>
+                            <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
+                        </div>
                     </div>
-                    <a href="freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center;">
-                        <span id="global-balance-fc">0.00</span> FC
-                        <span class="plus-icon">+</span>
-                    </a>
-                </div>
-                
-                <div class="user-menu">
-                    <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
-                    
-                    <div class="dropdown" id="user-dropdown">
-                        <a href="profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
-                            <div id="dropdown-pseudo">Joueur</div>
-                        </a>
-                        
-                        <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
-                    </div>
-                </div>
             </div>
         </div>
     </header>
@@ -79,9 +78,9 @@
         
         <div style="text-align: center; margin-bottom: 50px;">
             <h1 style="font-size: 40px; margin-bottom: 10px; font-weight: 900;">Bienvenue sur STAKE<span style="color: var(--accent);">LITE</span></h1>
-            <p style="color: var(--text-sec); font-size: 18px;">Gagne de l'argent sans jamais en mettre en jeu</p>
+            <p style="color: var(--text-sec); font-size: 18px;">Gagnez des récompenses gratuites grâce à votre logique</p>
         </div>
-
+        <button class="btn-cta" onclick="openAuthModal(false)" style="margin-bottom: 50px;">JOUER DÈS MAINTENANT</button>
         <div style="width: 100%; max-width: 800px;">
             <h2 style="color: var(--text-sec); text-transform: uppercase; font-size: 14px; margin-bottom: 20px; letter-spacing: 1px;">Nos Jeux</h2>
             
@@ -121,7 +120,7 @@
         <div class="footer-links">
             <a href="legal.html">Mentions Légales & Confidentialité</a>
             <a href="contact.html">Contact</a>
-            <a href="faq.html">FAQ & Règles</a>
+            <a href="faq.html">FAQ</a>
         </div>
         <div class="footer-copy">
             <p>&copy; 2026 StakeLite. Tous droits réservés.</p>
