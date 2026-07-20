@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StakeLite - Panel Admin</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Supabase & Scripts principaux -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="main.js" defer></script>
+</head>
+<body style="padding: 50px; text-align: center; background-color: var(--bg-main, #0f1923); color: white; font-family: sans-serif;">
+
+    <div style="max-width: 600px; margin: 0 auto;">
+        <h1 style="color: #facc15; margin-bottom: 10px;">👑 Panel Administrateur</h1>
+        <p style="color: #888; margin-bottom: 30px;">Gestion des quêtes StakeLite</p>
+
+        <!-- Message de chargement / vérification -->
+        <div id="msg-statut" style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; color: #00ccff;">
+            Vérification de tes droits d'accès en cours...
+        </div>
+
+        <!-- Le conteneur du formulaire, caché par défaut -->
+        <div id="admin-panel" style="display: none; background: rgba(255,255,255,0.02); border: 1px solid #222; padding: 30px; border-radius: 10px; text-align: left;">
+            <h3 style="margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px;">Ajouter une nouvelle quête</h3>
+            
+            <div class="input-group" style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; color: #aaa;">Titre de la quête</label>
+                <input type="text" id="quete-titre" placeholder="Ex: S'abonner à notre chaîne YouTube" style="width: 100%; padding: 10px; background: #111; border: 1px solid #333; color: white; border-radius: 4px;">
+            </div>
+            
+            <div class="input-group" style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; color: #aaa;">Description</label>
+                <input type="text" id="quete-desc" placeholder="Ex: Regarde notre dernière vidéo et lâche un like." style="width: 100%; padding: 10px; background: #111; border: 1px solid #333; color: white; border-radius: 4px;">
+            </div>
+
+            <div class="input-group" style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; color: #aaa;">Type d'action</label>
+                <select id="quete-type" style="width: 100%; padding: 10px; background: #111; border: 1px solid #333; color: white; border-radius: 4px; outline: none;">
+                    <option value="clic">Visite / Lien simple (Discord, YouTube...)</option>
+                    <option value="jouer_mines">Jouer aux Mines</option>
+                    <option value="jouer_blackjack">Jouer au Blackjack</option>
+                </select>
+            </div>
+
+            <div class="input-group" style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; color: #aaa;">Objectif (Nombre de fois requis)</label>
+                <input type="number" id="quete-objectif" value="1" min="1" style="width: 100%; padding: 10px; background: #111; border: 1px solid #333; color: white; border-radius: 4px;">
+            </div>
+            
+            <div class="input-group" style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; color: #aaa;">Récompense (en FC)</label>
+                <input type="number" id="quete-fc" placeholder="Ex: 500" style="width: 100%; padding: 10px; background: #111; border: 1px solid #333; color: white; border-radius: 4px;">
+            </div>
+            
+            <div class="input-group" style="margin-bottom: 25px;">
+                <label style="display: block; margin-bottom: 5px; color: #aaa;">Lien de redirection (Optionnel)</label>
+                <input type="text" id="quete-lien" placeholder="Ex: https://youtube.com/..." style="width: 100%; padding: 10px; background: #111; border: 1px solid #333; color: white; border-radius: 4px;">
+            </div>
+
+            <button class="main-btn green" onclick="creerQuete()" style="width: 100%; padding: 12px; font-weight: bold; cursor: pointer; border: none; border-radius: 4px;">
+                Publier la quête
+            </button>
+        </div>
+
+        <div style="margin-top: 30px;">
+            <a href="index.html" style="color: #888; text-decoration: none; font-size: 0.9rem;">← Retour à l'accueil</a>
+        </div>
+    </div>
+
+    <script>
+        // Vérification des droits administrateur
+        let verifAdmin = setInterval(async () => {
+            if (typeof monPseudo !== 'undefined' && monPseudo) {
+                clearInterval(verifAdmin);
+                
+                try {
+                    const { data, error } = await client
+                        .from('Joueurs')
+                        .select('est_admin')
+                        .eq('pseudo', monPseudo)
+                        .single();
+
+                    if (data && data.est_admin === true) {
+                        // Accès autorisé
+                        document.getElementById('msg-statut').style.display = 'none';
+                        document.getElementById('admin-panel').style.display = 'block';
+                    } else {
+                        // Accès refusé
+                        document.getElementById('msg-statut').style.color = '#ff4444';
+                        document.getElementById('msg-statut').innerText = "Accès refusé. Redirection...";
+                        setTimeout(() => window.location.href = 'index.html', 2000);
+                    }
+                } catch (err) {
+                    document.getElementById('msg-statut').innerText = "Erreur de connexion à la base de données.";
+                }
+            } else if (typeof monPseudo !== 'undefined' && monPseudo === null) {
+                clearInterval(verifAdmin);
+                document.getElementById('msg-statut').style.color = '#ff4444';
+                document.getElementById('msg-statut').innerText = "Vous devez être connecté. Redirection...";
+                setTimeout(() => window.location.href = 'index.html', 2000);
+            }
+        }, 500);
+
+        // Fonction pour envoyer la nouvelle quête à Supabase
+        async function creerQuete() {
+            const titre = document.getElementById('quete-titre').value.trim();
+            const desc = document.getElementById('quete-desc').value.trim();
+            const typeAction = document.getElementById('quete-type').value;
+            const objectif = document.getElementById('quete-objectif').value;
+            const fc = document.getElementById('quete-fc').value.trim();
+            const lien = document.getElementById('quete-lien').value.trim();
+
+            if (!titre || !desc || !fc || !objectif) {
+                if (typeof showToast === 'function') {
+                    showToast("Veuillez remplir les champs obligatoires.", "error");
+                } else {
+                    alert("Veuillez remplir les champs obligatoires !");
+                }
+                return;
+            }
+
+            const btn = document.querySelector('.main-btn.green');
+            const originalText = btn.innerText;
+            btn.innerText = "Création en cours...";
+            btn.disabled = true;
+
+            const { data, error } = await client.rpc('admin_ajouter_quete', {
+                p_pseudo: monPseudo,
+                p_titre: titre,
+                p_description: desc,
+                p_recompense: parseInt(fc),
+                p_lien: lien,
+                p_type_action: typeAction,
+                p_objectif: parseInt(objectif)
+            });
+
+            btn.innerText = originalText;
+            btn.disabled = false;
+
+            if (error || (data && data.status === 'erreur')) {
+                const msgError = data ? data.message : error.message;
+                if (typeof showToast === 'function') {
+                    showToast("Erreur : " + msgError, "error");
+                } else {
+                    alert("Erreur : " + msgError);
+                }
+            } else {
+                if (typeof showToast === 'function') {
+                    showToast("✅ Quête publiée avec succès !", "info");
+                } else {
+                    alert("✅ Quête publiée avec succès !");
+                }
+                
+                // On vide le formulaire
+                document.getElementById('quete-titre').value = '';
+                document.getElementById('quete-desc').value = '';
+                document.getElementById('quete-fc').value = '';
+                document.getElementById('quete-lien').value = '';
+                document.getElementById('quete-objectif').value = '1';
+                document.getElementById('quete-type').value = 'clic';
+            }
+        }
+    </script>
+</body>
+</html>

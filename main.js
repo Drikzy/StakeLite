@@ -14,18 +14,20 @@ async function checkSession() {
     
     const guestMenu = document.getElementById('guest-menu');
     const loggedInMenu = document.getElementById('logged-in-menu');
+    const boutonJouer = document.getElementById('cta-jouer');
 
     if (session) {
         console.log("Session trouvée ! Connecté avec :", session.user.email);
         monPseudo = session.user.user_metadata.pseudo;
         if (guestMenu) guestMenu.style.display = 'none';
         if (loggedInMenu) loggedInMenu.style.display = 'flex';
-        
+        if (boutonJouer) boutonJouer.style.display = 'none';
         initPlayer();
     } else {
         console.log("Aucune session. Mode visiteur.");
         if (guestMenu) guestMenu.style.display = 'flex';
         if (loggedInMenu) loggedInMenu.style.display = 'none';
+        if (boutonJouer) boutonJouer.style.display = 'inline-block';
     }
 }
 
@@ -293,27 +295,41 @@ if (toggleBtn) {
     });
 }
 
-function recolterBonus() {
-    alert("Félicitations ! 100 FC ont été ajoutés à votre compte (Bonus Journalier).");
-}
+function showToast(message, type = 'error') {
+    // Création dynamique de l'élément de notification
+    const toast = document.createElement('div');
+    toast.innerHTML = type === 'error' ? `⚠️ ${message}` : `ℹ️ ${message}`;
+    
+    // Style de la notification (centrée en bas)
+    toast.style.position = 'fixed';
+    toast.style.bottom = '30px';
+    toast.style.left = '50%';
+    toast.style.transform = 'translateX(-50%) translateY(50px)'; // Démarrage plus bas pour l'animation
+    toast.style.backgroundColor = type === 'error' ? '#ef4444' : '#3b82f6';
+    toast.style.color = '#fff';
+    toast.style.padding = '12px 24px';
+    toast.style.borderRadius = '8px';
+    toast.style.fontWeight = 'bold';
+    toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.4)';
+    toast.style.zIndex = '999999';
+    toast.style.opacity = '0';
+    toast.style.transition = 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+    toast.style.pointerEvents = 'none'; // Empêche de bloquer les clics en dessous
 
-function copierLienParrainage(bouton) {
-    navigator.clipboard.writeText("https://stakelite.fr").then(() => {
-        const texteOriginal = bouton.innerText;
-        bouton.innerText = "Copié ! ✅";
-        bouton.style.color = "var(--accent)";
-        bouton.style.borderColor = "var(--accent)";
-        
-        setTimeout(() => {
-            bouton.innerText = texteOriginal;
-            bouton.style.color = "";
-            bouton.style.borderColor = "";
-        }, 2000);
-        
-    }).catch(err => {
-        console.error("Erreur lors de la copie : ", err);
-        alert("Impossible de copier le lien automatiquement.");
-    });
+    document.body.appendChild(toast);
+
+    // Animation d'entrée
+    setTimeout(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+    }, 10);
+
+    // Animation de sortie et suppression du DOM
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(20px)';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }
 
 document.addEventListener('click', (event) => {

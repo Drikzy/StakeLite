@@ -243,54 +243,52 @@ a.fc-box:hover {
     align-items: center;
 }
 
-/* MOBILE : Refonte totale du menu */
 @media (max-width: 768px) {
-    /* 1. On cache les soldes du header pour libérer la place */
     .balances-container {
         display: none;
     }
 
-    /* 2. On les affiche au clic comme le "chapeau" du menu déroulant */
     .balances-container.active-mobile {
         display: flex;
         flex-direction: column;
         position: absolute;
-        top: 55px; /* Démarre juste sous l'avatar */
+        top: 55px; 
         right: 0;
-        width: 160px; /* La même largeur que ton menu actuel */
+        width: 160px;
         background-color: #1a2c38;
         border: 1px solid #213743;
-        border-bottom: none; /* Fusionne avec le vrai menu en dessous */
+        border-bottom: none;
         border-radius: 8px 8px 0 0;
         padding: 15px 10px 15px 10px;
         z-index: 1000;
         box-shadow: 0 10px 25px rgba(0,0,0,0.8);
     }
 
-    /* 3. On étire les boutons GC/FC pour qu'ils prennent toute la largeur */
     .balances-container.active-mobile .balance-box {
     width: 100%;
-    justify-content: center; /* C'est cette ligne qui change tout ! */
+    justify-content: center;
     padding: 10px 15px;
     box-sizing: border-box;
     }
 
-    /* 4. On décale le vrai menu (Profil / Déconnexion) vers le bas pour l'accrocher sous les soldes */
     #user-dropdown.active {
-        top: 175px; /* Poussé vers le bas pour laisser la place aux boutons GC/FC */
-        border-radius: 0 0 8px 8px; /* Arrondi seulement en bas */
-        border-top: 1px solid #2a3441; /* Légère ligne de séparation */
+        top: 175px; 
+        border-radius: 0 0 8px 8px;
+        border-top: 1px solid #2a3441;
     }
 }
 
 /* =========================================
    PAGE D'ACCUEIL & CARTES JEUX
    ========================================= */
+
 .games-grid {
     display: flex;
     gap: 20px;
     justify-content: center;
-    flex-wrap: wrap; /* Permet de passer à la ligne sur petit écran */
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .game-card {
@@ -309,10 +307,22 @@ a.fc-box:hover {
     gap: 20px;
 }
 
+@media (min-width: 1024px) { 
+    .games-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); 
+        gap: 30px; 
+    }
+    
+    .game-card {
+        width: 100%;
+    }
+}
+
 .game-card:hover {
-    transform: translateY(-8px); /* Fait léviter la carte */
+    transform: translateY(-8px);
     border-color: var(--accent);
-    box-shadow: 0 10px 20px rgba(0, 231, 1, 0.1); /* Léger halo vert */
+    box-shadow: 0 10px 20px rgba(0, 231, 1, 0.1);
 }
 
 .game-icon {

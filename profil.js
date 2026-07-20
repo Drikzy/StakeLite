@@ -8,6 +8,8 @@ async function checkAccess() {
 
     monPseudo = session.user.user_metadata.pseudo;
     document.getElementById('update-pseudo').value = monPseudo;
+    monEmail = session.user.email;
+    document.getElementById('update-email').value = monEmail;
 }
 
 async function updateProfile(event) {
@@ -15,29 +17,58 @@ async function updateProfile(event) {
 
     const bouton = event.currentTarget || document.querySelector('button');
     
+    // 1. Récupération des champs
     const newPseudo = document.getElementById('update-pseudo').value.trim();
     const newEmail = document.getElementById('update-email').value.trim();
     const newPassword = document.getElementById('update-password').value.trim();
+    const currentPassword = document.getElementById('current-password').value.trim();
 
+    // 2. Vérification s'il y a des changements
     if (!newEmail && !newPassword && (!newPseudo || newPseudo === monPseudo)) {
-        alert("Tu n'as rien modifié !");
+        showToast("Tu n'as rien modifié !", "error");
+        return;
+    }
+
+    // 3. VÉRIFICATION DE SÉCURITÉ : Mot de passe actuel obligatoire
+    if (!currentPassword) {
+        showToast("Tu dois saisir ton mot de passe actuel pour valider les modifications.", "error");
         return;
     }
 
     bouton.innerText = "SAUVEGARDE EN COURS...";
     bouton.disabled = true;
 
+    // Récupération de l'email actuel via la session pour l'authentification
+    const { data: { session } } = await client.auth.getSession();
+    if (!session) {
+        showToast("Session expirée. Veuillez vous reconnecter.", "error");
+        setTimeout(() => window.location.href = "index.html", 2000);
+        return;
+    }
+    const currentEmail = session.user.email;
+
+    // 4. VALIDATION DU MOT DE PASSE ACTUEL AUPRÈS DE SUPABASE
+    const { error: verifyError } = await client.auth.signInWithPassword({
+        email: currentEmail,
+        password: currentPassword
+    });
+
+    if (verifyError) {
+        showToast("Le mot de passe actuel est incorrect. Modification annulée.", "error");
+        resetBouton(bouton);
+        return;
+    }
+
     // =========================================
     // ÉTAPE A : GESTION DU PSEUDO (Déménagement complet en SQL)
     // =========================================
     if (newPseudo && newPseudo !== monPseudo) {
         if (newPseudo.length < 3) {
-            alert("Le pseudo doit faire au moins 3 caractères.");
+            showToast("Le pseudo doit faire au moins 3 caractères.", "error");
             resetBouton(bouton);
             return;
         }
 
-        // On lance notre super fonction SQL qui déplace le solde et l'historique
         const { data, error: sqlError } = await client.rpc('modifier_pseudo', {
             p_ancien: monPseudo,
             p_nouveau: newPseudo
@@ -45,18 +76,17 @@ async function updateProfile(event) {
 
         if (sqlError) {
             console.error("Erreur SQL :", sqlError);
-            alert("Erreur base de données. Ton pseudo n'a pas été changé.");
+            showToast("Erreur base de données. Ton pseudo n'a pas été changé.", "error");
             resetBouton(bouton);
             return;
         }
 
         if (data && data.status === 'erreur') {
-            alert(data.message); // Affiche "Ce pseudo est déjà pris !"
+            showToast(data.message, "error"); // Affiche "Ce pseudo est déjà pris !"
             resetBouton(bouton);
             return;
         }
 
-        // Si la base de données a accepté, on change l'étiquette d'authentification
         const { error: authPseudoError } = await client.auth.updateUser({
             data: { pseudo: newPseudo }
         });
@@ -65,7 +95,6 @@ async function updateProfile(event) {
             console.error("Erreur Auth Pseudo :", authPseudoError);
         } else {
             monPseudo = newPseudo;
-            // On met à jour l'affichage en haut à droite
             const pseudoElement = document.getElementById('dropdown-pseudo');
             const avatarElement = document.getElementById('user-avatar');
             if (pseudoElement) pseudoElement.innerText = monPseudo;
@@ -84,7 +113,7 @@ async function updateProfile(event) {
         const { error: authError } = await client.auth.updateUser(authUpdates);
         
         if (authError) {
-            alert("Erreur lors de la mise à jour (Email/MDP) : " + authError.message);
+            showToast("Erreur lors de la mise à jour : " + authError.message, "error");
             resetBouton(bouton);
             return;
         }
@@ -94,13 +123,15 @@ async function updateProfile(event) {
     // ÉTAPE C : NETTOYAGE ET SUCCÈS
     // =========================================
     document.getElementById('update-password').value = "";
-    document.getElementById('update-email').value = "";
+    // On peut laisser l'email actuel affiché
+    document.getElementById('current-password').value = ""; 
     
-    // On recharge l'historique au cas où le joueur vient de changer de pseudo
-    chargerEtAfficherHistorique('historique-global-container');
+    if (typeof chargerEtAfficherHistorique === "function") {
+        chargerEtAfficherHistorique('historique-global-container');
+    }
 
     resetBouton(bouton);
-    alert("Profil mis à jour avec succès !");
+    showToast("Profil mis à jour avec succès !", "info");
 }
 
 function resetBouton(bouton) {
@@ -111,7 +142,9 @@ function resetBouton(bouton) {
 // INITIALISATION AU DÉMARRAGE DE LA PAGE
 async function initialiserPageProfil() {
     await checkAccess();
-    chargerEtAfficherHistorique('historique-global-container');
+    if (typeof chargerEtAfficherHistorique === "function") {
+        chargerEtAfficherHistorique('historique-global-container');
+    }
 }
 
 initialiserPageProfil();

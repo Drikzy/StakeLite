@@ -69,6 +69,7 @@
                             <a href="profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
                                 <div id="dropdown-pseudo">Joueur</div>
                             </a>
+                            <button class="dropdown-btn" onclick="window.location.href='boutique.html'" style="color: #ffffff;">Boutique</button>
                             <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
                         </div>
                     </div>
@@ -81,7 +82,8 @@
             <h1 style="font-size: 40px; margin-bottom: 10px; font-weight: 900;">Bienvenue sur STAKE<span style="color: var(--accent);">LITE</span></h1>
             <p style="color: var(--text-sec); font-size: 18px;">Gagnez des récompenses gratuites grâce à votre logique</p>
         </div>
-        <button class="btn-cta" onclick="openAuthModal(false)" style="margin-bottom: 50px;">JOUER DÈS MAINTENANT</button>
+        <button id="cta-jouer" class="btn-cta" onclick="openAuthModal(false)" style="margin-bottom: 50px;">JOUER DÈS MAINTENANT</button>
+        
         <div style="width: 100%; max-width: 800px;">
             <h2 style="color: var(--text-sec); text-transform: uppercase; font-size: 14px; margin-bottom: 20px; letter-spacing: 1px;">Nos Jeux</h2>
             
@@ -113,6 +115,33 @@
 
             </div>
         </div>
+
+        <section class="seo-description" style="margin: 60px 5% 40px 5%; padding: 30px; background-color: #1a202c; border-radius: 12px; color: #cbd5e1; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+            <h2 style="color: #ffffff; margin-bottom: 20px; font-size: 1.8em;">Découvrez StakeLite : Le divertissement récompensé</h2>
+            
+            <p style="margin-bottom: 15px; font-size: 1.1em; line-height: 1.6;">
+                Bienvenue sur <strong>StakeLite</strong>, la plateforme de mini-jeux en ligne où votre logique et votre esprit d'analyse sont mis à l'honneur. Notre concept est simple : vous offrir une expérience de jeu 100 % gratuite tout en vous permettant de cumuler des récompenses virtuelles. Aucun dépôt n'est requis, ici, c'est votre stratégie qui fait la différence.
+            </p>
+
+            <h3 style="color: #4ade80; margin-top: 30px; margin-bottom: 15px; font-size: 1.4em;">Comment fonctionnent nos mini-jeux ?</h3>
+            
+            <p style="margin-bottom: 15px; line-height: 1.6;">
+                Que vous soyez amateur de probabilités ou de défis de réflexion, StakeLite propose des modes de jeux variés et accessibles à tous :
+            </p>
+            
+            <ul style="margin-bottom: 20px; margin-left: 20px; line-height: 1.8;">
+                <li><strong>Le jeu des Mines :</strong> Un classique de la déduction. Naviguez sur la grille et évitez les pièges pour multiplier vos gains virtuels. Savoir s'arrêter au bon moment est la clé.</li>
+                <li><strong>Le Blackjack :</strong> Affrontez le croupier virtuel dans ce jeu de cartes mythique. Utilisez les statistiques et la stratégie de base pour obtenir 21 et remporter la manche.</li>
+                <li><strong>Pronostics Sportifs :</strong> Testez vos connaissances sportives en prédisant l'issue des plus grandes rencontres sans engager le moindre centime.</li>
+            </ul>
+
+            <h3 style="color: #4ade80; margin-top: 30px; margin-bottom: 15px; font-size: 1.4em;">Jouez, cumulez, échangez</h3>
+            
+            <p style="margin-bottom: 0; line-height: 1.6;">
+                Sur StakeLite, l'assiduité est récompensée. Connectez-vous chaque jour pour récupérer vos bonus, accomplissez des quêtes et accumulez nos jetons virtuels. Une fois que vous en avez suffisamment, rendez-vous dans notre boutique exclusive pour échanger vos points contre de véritables cartes cadeaux. Rejoignez la communauté dès aujourd'hui et commencez à jouer intelligemment !
+            </p>
+
+        </section>
 
     </main>
 </body>

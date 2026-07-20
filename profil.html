@@ -70,6 +70,7 @@
                             <a href="profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
                                 <div id="dropdown-pseudo">Joueur</div>
                             </a>
+                            <button class="dropdown-btn" onclick="window.location.href='boutique.html'" style="color: #ffffff;">Boutique</button>
                             <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
                         </div>
                     </div>
@@ -82,18 +83,24 @@
             <h2 style="margin-bottom: 20px; text-align: center;">⚙️ Mon Profil</h2>
             
             <div class="input-group">
-                <label>Changer le Pseudo</label>
+                <label>Pseudo</label>
                 <input type="text" id="update-pseudo" placeholder="Chargement...">
             </div>
 
             <div class="input-group">
-                <label>Changer l'Email</label>
-                <input type="email" id="update-email" placeholder="Nouvel email...">
+                <label>Email</label>
+                <input type="email" id="update-email" placeholder="Chargement...">
             </div>
 
             <div class="input-group">
                 <label>Changer le Mot de passe</label>
                 <input type="password" id="update-password" placeholder="Nouveau mot de passe...">
+            </div>
+
+            <!-- NOUVEAU CHAMP : Mot de passe actuel -->
+            <div class="input-group" style="margin-top: 30px; border-top: 1px solid #334155; padding-top: 20px;">
+                <label style="color: #ef4444;">Confirmer avec le mot de passe actuel</label>
+                <input type="password" id="current-password" placeholder="Mot de passe actuel obligatoire...">
             </div>
 
             <button class="main-btn green" style="margin-top: 10px;" onclick="updateProfile(event)">SAUVEGARDER</button>

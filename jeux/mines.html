@@ -11,7 +11,6 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="../main.js" defer></script>
     <script src="mines.js" defer></script>
-    <script src="../anti-adblock.js" defer></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6973249683175377" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -57,11 +56,11 @@
             <div id="logged-in-menu" style="display: none; align-items: center;">
                     <div class="user-menu" style="display: flex; align-items: center; gap: 15px; position: relative;">
                         <div class="balances-container" id="balances-menu">
-                            <a href="boutique.html" class="balance-box gc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <a href="../boutique.html" class="balance-box gc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
                                 <span id="global-balance-gc">0.00</span> 
                                 <span>GC</span>
                             </a>
-                            <a href="freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <a href="../freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
                                 <span id="global-balance-fc">0.00</span> 
                                 <span>FC</span>
                                 <span class="plus-icon">+</span>
@@ -69,9 +68,10 @@
                         </div>
                         <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
                         <div class="dropdown" id="user-dropdown">
-                            <a href="profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
+                            <a href="../profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
                                 <div id="dropdown-pseudo">Joueur</div>
                             </a>
+                            <button class="dropdown-btn" onclick="window.location.href='boutique.html'" style="color: #ffffff;">Boutique</button>
                             <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
                         </div>
                     </div>

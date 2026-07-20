@@ -219,46 +219,6 @@ function closeWinModal() {
     }, 300);
 }
 
-// =========================================
-// 5. SYSTÈME DE NOTIFICATIONS (TOASTS)
-// =========================================
-function showToast(message, type = 'error') {
-    // Création dynamique de l'élément de notification
-    const toast = document.createElement('div');
-    toast.innerHTML = type === 'error' ? `⚠️ ${message}` : `ℹ️ ${message}`;
-    
-    // Style de la notification (centrée en bas)
-    toast.style.position = 'fixed';
-    toast.style.bottom = '30px';
-    toast.style.left = '50%';
-    toast.style.transform = 'translateX(-50%) translateY(50px)'; // Démarrage plus bas pour l'animation
-    toast.style.backgroundColor = type === 'error' ? '#ef4444' : '#3b82f6';
-    toast.style.color = '#fff';
-    toast.style.padding = '12px 24px';
-    toast.style.borderRadius = '8px';
-    toast.style.fontWeight = 'bold';
-    toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.4)';
-    toast.style.zIndex = '999999';
-    toast.style.opacity = '0';
-    toast.style.transition = 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-    toast.style.pointerEvents = 'none'; // Empêche de bloquer les clics en dessous
-
-    document.body.appendChild(toast);
-
-    // Animation d'entrée
-    setTimeout(() => {
-        toast.style.opacity = '1';
-        toast.style.transform = 'translateX(-50%) translateY(0)';
-    }, 10);
-
-    // Animation de sortie et suppression du DOM
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateX(-50%) translateY(20px)';
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
-}
-
 setTimeout(() => {
     chargerEtAfficherHistorique('historique-mines-container', 'Mines');
 }, 500);
