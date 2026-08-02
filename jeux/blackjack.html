@@ -135,16 +135,30 @@
             <h3>⚠️ Attention : Ne quitte pas la page en pleine partie, sinon tu perdras ta mise !</h3>
         </div>
         
-        <div id="expl-game">
-            <h3>Règles du Blackjack</h3>
-            <p>
-                Affronte le croupier dans un duel psychologique où chaque carte compte. <br><strong>Ton objectif ?</strong> Obtenir un score aussi proche que possible de 21 sans jamais dépasser cette limite. Chaque décision, tirer une carte, rester, ou doubler, peut faire basculer la partie. Analyse les probabilités, garde ton sang-froid et fais sauter la banque dans cette expérience de Blackjack fluide et immersive. 
-                <br>Au Blackjack, les gains sont déterminés de manière très précise selon le scénario de fin de partie. Une victoire standard, obtenue en ayant un meilleur score que le croupier sans dépasser 21, offre un rapport de 1:1, ce qui signifie que tu récupères ta mise en plus d'un montant équivalent en bénéfice. 
-                Le gain ultime reste le Blackjack naturel (un As et une tête dès la distribution initiale), payé à un taux avantageux de 3:2, soit 1,5 fois ta mise de départ. 
-                En cas d'égalité parfaite des scores, la situation est appelée un "Push": il n'y a aucun gagnant, le casino ne prend rien et ta mise t'est intégralement rendue. En revanche, si tu dépasses 21, ou si le croupier obtient un meilleur score, la mise est définitivement perdue. <br><br>
+        <div id="expl-game" style="text-align: left; padding: 20px;">
+            <h3 style="color: #4ade80; margin-bottom: 15px; font-size: 1.5em;">Règles et Mathématiques du Blackjack</h3>
+            <p style="line-height: 1.6; margin-bottom: 15px;">
+                Affrontez le croupier virtuel de StakeLite dans un duel où la psychologie laisse place aux mathématiques. 
+                <br><strong>Votre objectif principal :</strong> Obtenir un score total de vos cartes aussi proche que possible de 21, sans jamais dépasser cette limite fatidique. Chaque décision (tirer une carte supplémentaire, rester sur votre score actuel, ou doubler votre mise) modifie fondamentalement vos probabilités de victoire.
             </p>
-            <h3>Règle du croupier</h3>
-            <p>Au Blackjack, le croupier est obligé de tirer une carte jusqu'à atteindre au moins 17. <br>Utilise cette information pour décider quand rester ou tirer !</p>
+            <p style="line-height: 1.6; margin-bottom: 15px;">
+                Les paiements au Blackjack suivent des règles précises : 
+            </p>
+            <ul style="margin-bottom: 25px; margin-left: 20px; line-height: 1.8; color: #cbd5e1;">
+                <li>Une <strong>victoire classique</strong> (battre le croupier) vous octroie un rapport de 1:1 : vous récupérez votre mise de base et encaissez un bénéfice d'un montant équivalent. Par exemple, une mise de 100GC vous rapportera 200 GC (100 GC de mise + 100 GC de bénéfice).</li>
+                <li>La <strong>combinaison parfaite</strong>, le "Blackjack Naturel" (constitué d'un As et d'une carte valant 10 points distribués dès les deux premières cartes), offre un paiement majoré de 3:2. Par exemple, une mise de 100GC vous rapportera 250 GC (100 GC de mise + 150 GC de bénéfice).</li>
+                <li>En cas d'égalité stricte des scores finaux, le scénario est appelé un "Push" : le jeu est déclaré nul et votre mise initiale vous est intégralement restituée.</li>
+            </ul>
+
+            <h3 style="color: #00ccff; margin-bottom: 15px; font-size: 1.3em;">L'importance de la Stratégie de Base</h3>
+            <p style="line-height: 1.6; margin-bottom: 25px;">
+                Le Blackjack n'est pas qu'un jeu de chance, c'est avant tout un jeu statistique. La "stratégie de base" est un tableau mathématique qui détermine l'action optimale à effectuer en fonction de vos cartes et de la carte visible du croupier. Un principe fondamental est de toujours considérer que la carte cachée du croupier vaut 10 (car les cartes valant 10 — les 10, Valets, Dames et Rois — sont les plus nombreuses du sabot). Ainsi, si le croupier affiche un 5 ou un 6, il est statistiquement en mauvaise posture. Il est alors souvent recommandé de "Rester" même avec une main faible (comme un 12 ou un 13) pour le laisser tirer et dépasser 21 par lui-même.
+            </p>
+
+            <h3 style="color: #facc15; margin-bottom: 15px; font-size: 1.3em;">La règle d'or du croupier</h3>
+            <p style="line-height: 1.6; margin-bottom: 0;">
+                Pour garantir l'équité et la transparence, le croupier de StakeLite obéit à une règle algorithmique stricte et universelle : il est dans l'obligation absolue de tirer une carte supplémentaire tant que son score est inférieur à 17. S'il atteint 17 ou plus, il doit s'arrêter de tirer, même si votre score est supérieur au sien. Gardez cette contrainte mécanique en tête lors de chacune de vos décisions pour optimiser vos gains de FreeCoins !
+            </p>
         </div>
     </section>
     <div class="game-history-section">
