@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <!-- Pages Principales -->
+    <url>
+        <loc>https://stakelite.fr/</loc>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>https://stakelite.fr/boutique.html</loc>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://stakelite.fr/freecoins.html</loc>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Jeux -->
+    <url>
+        <loc>https://stakelite.fr/jeux/mines.html</loc>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://stakelite.fr/jeux/blackjack.html</loc>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://stakelite.fr/jeux/paris.html</loc>
+        <priority>0.9</priority>
+    </url>
+
+    <!-- Pôle Guides & Stratégies (Très important pour AdSense) -->
+    <url>
+        <loc>https://stakelite.fr/guides/index.html</loc>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://stakelite.fr/guides/ps_cote.html</loc>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://stakelite.fr/guides/bj_strategie.html</loc>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://stakelite.fr/guides/mines_proba.html</loc>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://stakelite.fr/guides/gestion_bankroll.html</loc>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Pages Légales -->
+    <url>
+        <loc>https://stakelite.fr/faq.html</loc>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://stakelite.fr/legal.html</loc>
+        <priority>0.5</priority>
+    </url>
+    <url>
+        <loc>https://stakelite.fr/contact.html</loc>
+        <priority>0.5</priority>
+    </url>
+</urlset>

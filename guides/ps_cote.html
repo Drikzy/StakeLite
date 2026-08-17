@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StakeLite - Comprendre les Cotes</title>
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <link rel="stylesheet" href="../style.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../main.js" defer></script>
+</head>
+<body>
+    <div id="login-overlay" class="overlay">
+        <div class="login-box" style="position: relative;">
+            <span onclick="document.getElementById('login-overlay').classList.remove('active')" style="position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #888;">&times;</span>
+            <h2 id="auth-title">Connexion à StakeLite</h2>
+            
+            <div class="auth-form">
+                <div id="pseudo-group" class="input-group" style="display: none;">
+                    <label>Pseudo</label>
+                    <input type="text" id="auth-pseudo" placeholder="">
+                </div>
+
+                <div class="input-group">
+                    <label>Adresse Email</label>
+                    <input type="email" id="auth-email" placeholder="exemple@mail.com">
+                </div>
+
+                <div class="input-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="auth-password" placeholder="••••••••">
+                </div>
+
+                <button id="auth-main-btn" class="main-btn green" onclick="handleAuth()">SE CONNECTER</button>
+            </div>
+
+            <p class="auth-switch">
+                <span id="auth-switch-text">Pas encore de compte ?</span> 
+                <a href="#" id="auth-switch-link" onclick="toggleAuthMode(event)">S'inscrire</a>
+            </p>
+        </div>
+    </div>
+    
+    <header>
+        <a href="../index.html" class="logo" style="text-decoration: none; color: var(--text-main);">STAKE<span>LITE</span></a>
+        
+        <div class="header-right">
+            <div id="guest-menu" style="display: none; gap: 15px; align-items: center;">
+                <button class="auth-btn login-btn" onclick="openAuthModal(true)">Se connecter</button>
+                <button class="auth-btn signup-btn" onclick="openAuthModal(false)">S'inscrire</button>
+            </div>
+
+            <div id="logged-in-menu" style="display: none; align-items: center;">
+                    <div class="user-menu" style="display: flex; align-items: center; gap: 15px; position: relative;">
+                        <div class="balances-container" id="balances-menu">
+                            <a href="../boutique.html" class="balance-box gc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-gc">0.00</span> 
+                                <span>GC</span>
+                            </a>
+                            <a href="../freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-fc">0.00</span> 
+                                <span>FC</span>
+                                <span class="plus-icon">+</span>
+                            </a>
+                        </div>
+                        <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
+                        <div class="dropdown" id="user-dropdown">
+                            <a href="../profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
+                                <div id="dropdown-pseudo">Joueur</div>
+                            </a>
+                            <button class="dropdown-btn" onclick="window.location.href='../boutique.html'" style="color: #ffffff;">Boutique</button>
+                            <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </header>
+
+    <main style="padding: 50px 20px; display: flex; flex-direction: column; align-items: center; width: 100%;">
+        <!-- Fil d'Ariane -->
+        <div style="max-width: 800px; width: 100%; text-align: left; margin-bottom: 20px; font-size: 0.95rem; color: #64748b;">
+            <a href="../index.html" style="color: #cbd5e1; text-decoration: none;">Accueil</a> 
+            <span style="margin: 0 10px;">/</span> 
+            <a href="index.html" style="color: #cbd5e1; text-decoration: none;">Guides & Stratégies</a> 
+            <span style="margin: 0 10px;">/</span> 
+            <span style="color: #00ccff;">Comprendre les Cotes</span>
+        </div>
+        <article style="max-width: 800px; width: 100%; text-align: left; background: rgba(255,255,255,0.02); border: 1px solid #334155; border-radius: 12px; padding: 40px;">
+            <h1 style="color: #00ccff; margin-bottom: 20px; font-size: 2.2em;">Guide Complet : Comprendre les Cotes des Paris Sportifs</h1>
+            
+            <p style="color: #cbd5e1; line-height: 1.8; font-size: 1.1em; margin-bottom: 25px;">
+                Les paris sportifs peuvent sembler complexes pour un œil non averti, mais ils reposent en réalité sur des fondements mathématiques très précis. Sur StakeLite, bien que l'expérience soit 100% gratuite avec nos FreeCoins, le mécanisme des cotes reproduit fidèlement la réalité des bookmakers professionnels. Voici comment lire, analyser et exploiter ces chiffres.
+            </p>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">1. Qu'est-ce qu'une cote décimale (européenne) ?</h2>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 20px;">
+                Il existe plusieurs formats de cotes à travers le monde (fractionnelles au Royaume-Uni, américaines aux États-Unis), mais StakeLite utilise la cote décimale, qui est le standard en Europe. Une cote décimale (par exemple 1.50, 2.10, ou 4.00) représente deux choses fondamentales :
+            </p>
+            <ul style="color: #cbd5e1; line-height: 1.8; margin-bottom: 25px; margin-left: 20px;">
+                <li><strong>Le multiplicateur de gain :</strong> C'est le chiffre par lequel votre mise initiale sera multipliée si votre pronostic est exact.</li>
+                <li><strong>La probabilité implicite :</strong> C'est l'estimation statistique qu'un événement se produise, calculée par l'algorithme ou le bookmaker.</li>
+            </ul>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">2. Calculer ses gains potentiels</h2>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 20px;">
+                La formule de calcul est très simple : <code>Mise × Cote = Gain Total</code>. Il est important de distinguer le gain total du bénéfice net (le profit réel que vous tirez du pari).
+            </p>
+            <div style="background: rgba(16, 185, 129, 0.1); border-left: 4px solid #10b981; padding: 15px; margin-bottom: 25px; border-radius: 4px;">
+                <p style="color: #cbd5e1; margin-bottom: 0;">
+                    <strong>Exemple pratique :</strong> Vous pariez 100 FreeCoins (FC) sur une victoire de l'équipe à domicile cotée à 2.50.<br>
+                    Gain total : 100 × 2.50 = 250 FC.<br>
+                    Bénéfice net : 250 (Gain total) - 100 (Votre mise) = <strong>+150 FC de bénéfice pur</strong>.
+                </p>
+            </div>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">3. Transformer une cote en pourcentage de probabilité</h2>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 20px;">
+                Pour savoir si une cote est "intéressante" (ce que les parieurs appellent trouver de la <em>Value</em>), il faut traduire la cote en pourcentage de probabilité de victoire. La formule mathématique est la suivante : <code>(1 / Cote) × 100</code>.
+            </p>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 20px;">
+                Prenons le cas d'un grand favori coté à 1.25. Selon le calcul : (1 / 1.25) × 100 = 80%. L'algorithme estime donc que cette équipe a 80% de chances de remporter le match. À l'inverse, un outsider coté à 5.00 se voit attribuer seulement 20% de chances de victoire (1 / 5.00 × 100 = 20%). 
+            </p>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">4. La gestion du Live et des API sur StakeLite</h2>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 25px;">
+                Afin de vous fournir une expérience immersive, les données des matchs de notre section Paris Sportifs sont connectées directement aux flux mondiaux via API. Lorsqu'un match débute, le statut passe automatiquement "En Direct". Les cotes de pré-match sont alors verrouillées pour garantir la sécurité et l'équité de la plateforme. En vous entraînant à lire les cotes pré-match sur StakeLite, vous développez votre capacité d'analyse sans engager le moindre risque financier.
+            </p>
+            
+            <hr style="border: none; border-top: 1px solid #334155; margin: 40px 0;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="width: 50px; height: 50px; background-color: #00ccff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; color: #1a202c;">F</div>
+                <div>
+                    <p style="color: #fff; margin: 0; font-weight: bold;">Écrit par Florian</p>
+                    <p style="color: #888; margin: 0; font-size: 0.9em;">Étudiant en informatique et concepteur de StakeLite. Passionné par l'algorithmie et les modèles prédictifs.</p>
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="legal.html">Mentions Légales & Confidentialité</a>
+                <a href="contact.html">Contact</a>
+                <a href="faq.html">FAQ</a>
+                <a href="guides/index.html">Guides & Stratégies</a>
+            </div>
+            <div class="footer-copy">
+                <p>&copy; 2026 StakeLite. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

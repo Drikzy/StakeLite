@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StakeLite - Stratégie Blackjack</title>
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <link rel="stylesheet" href="../style.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../main.js" defer></script>
+</head>
+<body>
+    <div id="login-overlay" class="overlay">
+        <div class="login-box" style="position: relative;">
+            <span onclick="document.getElementById('login-overlay').classList.remove('active')" style="position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #888;">&times;</span>
+            <h2 id="auth-title">Connexion à StakeLite</h2>
+            
+            <div class="auth-form">
+                <div id="pseudo-group" class="input-group" style="display: none;">
+                    <label>Pseudo</label>
+                    <input type="text" id="auth-pseudo" placeholder="">
+                </div>
+
+                <div class="input-group">
+                    <label>Adresse Email</label>
+                    <input type="email" id="auth-email" placeholder="exemple@mail.com">
+                </div>
+
+                <div class="input-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="auth-password" placeholder="••••••••">
+                </div>
+
+                <button id="auth-main-btn" class="main-btn green" onclick="handleAuth()">SE CONNECTER</button>
+            </div>
+
+            <p class="auth-switch">
+                <span id="auth-switch-text">Pas encore de compte ?</span> 
+                <a href="#" id="auth-switch-link" onclick="toggleAuthMode(event)">S'inscrire</a>
+            </p>
+        </div>
+    </div>
+    
+    <header>
+        <a href="../index.html" class="logo" style="text-decoration: none; color: var(--text-main);">STAKE<span>LITE</span></a>
+        
+        <div class="header-right">
+            <div id="guest-menu" style="display: none; gap: 15px; align-items: center;">
+                <button class="auth-btn login-btn" onclick="openAuthModal(true)">Se connecter</button>
+                <button class="auth-btn signup-btn" onclick="openAuthModal(false)">S'inscrire</button>
+            </div>
+
+            <div id="logged-in-menu" style="display: none; align-items: center;">
+                    <div class="user-menu" style="display: flex; align-items: center; gap: 15px; position: relative;">
+                        <div class="balances-container" id="balances-menu">
+                            <a href="../boutique.html" class="balance-box gc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-gc">0.00</span> 
+                                <span>GC</span>
+                            </a>
+                            <a href="../freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-fc">0.00</span> 
+                                <span>FC</span>
+                                <span class="plus-icon">+</span>
+                            </a>
+                        </div>
+                        <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
+                        <div class="dropdown" id="user-dropdown">
+                            <a href="../profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
+                                <div id="dropdown-pseudo">Joueur</div>
+                            </a>
+                            <button class="dropdown-btn" onclick="window.location.href='../boutique.html'" style="color: #ffffff;">Boutique</button>
+                            <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </header>
+
+    <main style="padding: 50px 20px; display: flex; flex-direction: column; align-items: center; width: 100%;">
+        <!-- Fil d'Ariane -->
+        <div style="max-width: 800px; width: 100%; text-align: left; margin-bottom: 20px; font-size: 0.95rem; color: #64748b;">
+            <a href="../index.html" style="color: #cbd5e1; text-decoration: none;">Accueil</a> 
+            <span style="margin: 0 10px;">/</span> 
+            <a href="index.html" style="color: #cbd5e1; text-decoration: none;">Guides & Stratégies</a> 
+            <span style="margin: 0 10px;">/</span> 
+            <span style="color: #10b981;">Stratégie Blackjack</span>
+        </div>
+        <article style="max-width: 800px; width: 100%; text-align: left; background: rgba(255,255,255,0.02); border: 1px solid #334155; border-radius: 12px; padding: 40px;">
+            <h1 style="color: #10b981; margin-bottom: 20px; font-size: 2.2em;">Blackjack : Les Mathématiques de la Stratégie de Base</h1>
+            
+            <p style="color: #cbd5e1; line-height: 1.8; font-size: 1.1em; margin-bottom: 25px;">
+                Parmi tous les jeux de cartes existants, le Blackjack est l'un des rares où les décisions du joueur ont un impact direct et quantifiable sur ses chances de victoire. Il ne s'agit pas uniquement de chance ou d'intuition : il s'agit d'une bataille statistique face à la banque. 
+            </p>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">L'avantage mathématique et l'illusion du "21"</h2>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 20px;">
+                La plus grande erreur des joueurs débutants est de penser que l'objectif du Blackjack est d'atteindre le score de 21. C'est faux. L'unique objectif du jeu est de <strong>battre le croupier</strong>. Vous pouvez tout à fait gagner une main avec un score très faible (comme 12 ou 13), tant que le croupier finit par dépasser 21 et "saute" (Bust).
+            </p>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 25px;">
+                Le croupier possède cependant un avantage structurel majeur : il joue toujours après vous. Si vous dépassez 21 (Bust), vous perdez immédiatement votre mise, même si le croupier dépasse 21 après vous. Pour contrebalancer ce désavantage, le joueur bénéficie de choix stratégiques que le croupier n'a pas.
+            </p>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">L'algorithme du Croupier sur StakeLite</h2>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 20px;">
+                Afin de simuler les conditions d'une véritable table, notre algorithme est programmé avec une règle stricte : <strong>Le croupier doit tirer jusqu'à 16, et doit rester à partir de 17</strong>.
+                Connaître cette règle mécanique est fondamental. Cela signifie que le croupier ne peut jamais faire preuve de prudence ou de prise de risque basée sur l'intuition. Si la carte visible du croupier est un 5 ou un 6, ses statistiques de probabilité de dépasser 21 sont à leur niveau maximum (environ 42% de chances de Bust).
+            </p>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">Les 3 règles d'or de la Stratégie de Base</h2>
+            <div style="background: rgba(15, 23, 42, 0.5); border: 1px solid #334155; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                <ul style="color: #cbd5e1; line-height: 1.8; margin-left: 20px;">
+                    <li style="margin-bottom: 10px;"><strong>Règle n°1 : Considérez toujours la carte cachée comme un 10.</strong> Les cartes ayant une valeur de 10 (les 10, Valets, Dames, Rois) représentent environ 30% du sabot. C'est la valeur la plus probable à chaque tirage. Si le croupier montre un 6, agissez en supposant qu'il a 16 (et qu'il sera obligé de tirer une carte qui le fera probablement sauter).</li>
+                    <li style="margin-bottom: 10px;"><strong>Règle n°2 : Ne tirez jamais si vous risquez de sauter face à une "petite" carte du croupier.</strong> Si vous avez 12 ou plus et que le croupier affiche une carte entre 2 et 6, choisissez toujours l'action "Rester". Laissez-le prendre le risque de tirer la carte fatale.</li>
+                    <li><strong>Règle n°3 : Tirez toujours si le croupier montre une figure ou un As.</strong> Si le croupier montre un 7, un 8, un 9, un 10 ou un As, et que vous avez moins de 17, vos chances mathématiques dictent de "Tirer", car le croupier a une très forte probabilité d'avoir une main solide (entre 17 et 20).</li>
+                </ul>
+            </div>
+    
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 25px;">
+                Sur notre interface, vous pouvez tester ces préceptes statistiques en temps réel en misant vos FreeCoins. Appliquez ces méthodes de manière méthodique et observez l'impact direct sur la fluctuation de votre bankroll virtuelle.
+            </p>
+            
+            <hr style="border: none; border-top: 1px solid #334155; margin: 40px 0;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="width: 50px; height: 50px; background-color: #00ccff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; color: #1a202c;">F</div>
+                <div>
+                    <p style="color: #fff; margin: 0; font-weight: bold;">Écrit par Florian</p>
+                    <p style="color: #888; margin: 0; font-size: 0.9em;">Étudiant en informatique et concepteur de StakeLite. Passionné par l'algorithmie et les modèles prédictifs.</p>
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="legal.html">Mentions Légales & Confidentialité</a>
+                <a href="contact.html">Contact</a>
+                <a href="faq.html">FAQ</a>
+                <a href="guides/index.html">Guides & Stratégies</a>
+            </div>
+            <div class="footer-copy">
+                <p>&copy; 2026 StakeLite. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

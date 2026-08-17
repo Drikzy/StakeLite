@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StakeLite - Gérer sa Bankroll Virtuelle</title>
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <link rel="stylesheet" href="../style.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../main.js" defer></script>
+</head>
+<body>
+    <div id="login-overlay" class="overlay">
+        <div class="login-box" style="position: relative;">
+            <span onclick="document.getElementById('login-overlay').classList.remove('active')" style="position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #888;">&times;</span>
+            <h2 id="auth-title">Connexion à StakeLite</h2>
+            
+            <div class="auth-form">
+                <div id="pseudo-group" class="input-group" style="display: none;">
+                    <label>Pseudo</label>
+                    <input type="text" id="auth-pseudo" placeholder="">
+                </div>
+
+                <div class="input-group">
+                    <label>Adresse Email</label>
+                    <input type="email" id="auth-email" placeholder="exemple@mail.com">
+                </div>
+
+                <div class="input-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="auth-password" placeholder="••••••••">
+                </div>
+
+                <button id="auth-main-btn" class="main-btn green" onclick="handleAuth()">SE CONNECTER</button>
+            </div>
+
+            <p class="auth-switch">
+                <span id="auth-switch-text">Pas encore de compte ?</span> 
+                <a href="#" id="auth-switch-link" onclick="toggleAuthMode(event)">S'inscrire</a>
+            </p>
+        </div>
+    </div>
+    
+    <header>
+        <a href="../index.html" class="logo" style="text-decoration: none; color: var(--text-main);">STAKE<span>LITE</span></a>
+        
+        <div class="header-right">
+            <div id="guest-menu" style="display: none; gap: 15px; align-items: center;">
+                <button class="auth-btn login-btn" onclick="openAuthModal(true)">Se connecter</button>
+                <button class="auth-btn signup-btn" onclick="openAuthModal(false)">S'inscrire</button>
+            </div>
+
+            <div id="logged-in-menu" style="display: none; align-items: center;">
+                    <div class="user-menu" style="display: flex; align-items: center; gap: 15px; position: relative;">
+                        <div class="balances-container" id="balances-menu">
+                            <a href="../boutique.html" class="balance-box gc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-gc">0.00</span> 
+                                <span>GC</span>
+                            </a>
+                            <a href="../freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-fc">0.00</span> 
+                                <span>FC</span>
+                                <span class="plus-icon">+</span>
+                            </a>
+                        </div>
+                        <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
+                        <div class="dropdown" id="user-dropdown">
+                            <a href="../profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
+                                <div id="dropdown-pseudo">Joueur</div>
+                            </a>
+                            <button class="dropdown-btn" onclick="window.location.href='../boutique.html'" style="color: #ffffff;">Boutique</button>
+                            <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </header>
+
+    <main style="padding: 50px 20px; display: flex; flex-direction: column; align-items: center; width: 100%;">
+        <!-- Fil d'Ariane -->
+        <div style="max-width: 800px; width: 100%; text-align: left; margin-bottom: 20px; font-size: 0.95rem; color: #64748b;">
+            <a href="../index.html" style="color: #cbd5e1; text-decoration: none;">Accueil</a> 
+            <span style="margin: 0 10px;">/</span> 
+            <a href="index.html" style="color: #cbd5e1; text-decoration: none;">Guides & Stratégies</a> 
+            <span style="margin: 0 10px;">/</span> 
+            <span style="color: #4ade80;">Gérer sa Bankroll</span>
+        </div>
+        <article style="max-width: 800px; width: 100%; text-align: left; background: rgba(255,255,255,0.02); border: 1px solid #334155; border-radius: 12px; padding: 40px;">
+            <h1 style="color: #4ade80; margin-bottom: 20px; font-size: 2.2em;">Guide Pratique : Gérer sa Bankroll Virtuelle (FC & GC)</h1>
+            
+            <p style="color: #cbd5e1; line-height: 1.8; font-size: 1.1em; margin-bottom: 25px;">
+                Dans le domaine de l'analyse sportive et des probabilités, la stratégie ne s'arrête pas aux règles du jeu. Le pilier central de tout joueur régulier est la gestion de son portefeuille, communément appelée la "Bankroll". Sur StakeLite, bien que l'environnement soit totalement gratuit, appliquer une gestion stricte de vos FreeCoins (FC) et GoldCoins (GC) est le meilleur entraînement possible pour maîtriser vos émotions et vos statistiques.
+            </p>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">1. Qu'est-ce que la Bankroll Management ?</h2>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 20px;">
+                Votre Bankroll correspond au capital total dont vous disposez. Si vous avez 5 000 FC en haut à droite de votre écran, c'est votre Bankroll de jeu. L'erreur la plus fréquente des débutants est de miser de façon aléatoire en fonction de leur "ressenti" (par exemple : miser 10 FC sur un pari, puis soudainement 1 000 FC sur la main de Blackjack suivante). Cette approche mène mathématiquement à la faillite, car elle vous expose de plein fouet à la variance (les séries de malchance).
+            </p>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">2. La règle mathématique des 5% (Le "Flat Betting")</h2>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 20px;">
+                La méthode la plus sécurisée et la plus utilisée par les analystes sportifs est le "Flat Betting", combiné à une règle de sécurité stricte : <strong>Ne jamais miser plus de 5% de votre Bankroll totale sur un seul événement.</strong>
+            </p>
+            <div style="background: rgba(16, 185, 129, 0.1); border-left: 4px solid #10b981; padding: 15px; margin-bottom: 25px; border-radius: 4px;">
+                <p style="color: #cbd5e1; margin-bottom: 0;">
+                    <strong>Application sur StakeLite :</strong><br>
+                    Si votre solde est de 1 000 FC, votre mise de base (appelée une "unité") ne devrait jamais dépasser 50 FC. Si vous tombez à 500 FC, votre nouvelle mise maximale sécurisée s'ajuste à 25 FC. Ce calcul simple vous garantit de pouvoir absorber les mauvaises séries sans vider votre compte.
+                </p>
+            </div>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">3. Distinguer la gestion des FC et des GC</h2>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 20px;">
+                Notre plateforme dispose d'une économie à double vitesse qui vous oblige à adapter vos stratégies :
+            </p>
+            <ul style="color: #cbd5e1; line-height: 1.8; margin-bottom: 25px; margin-left: 20px;">
+                <li><strong>Vos FreeCoins (FC) :</strong> C'est votre laboratoire d'expérimentation. N'ayant aucune valeur marchande et étant rechargeables via les quêtes quotidiennes, c'est avec cette monnaie que vous devez tester des stratégies à haute volatilité (comme le jeu des Mines avec 10 explosifs).</li>
+                <li><strong>Vos GoldCoins (GC) :</strong> C'est la monnaie premium échangeable en boutique. Elle est rare et précieuse. Votre gestion de Bankroll en GC doit être ultra-conservatrice (1 à 2% de mise maximum par partie) et concentrée sur des jeux à faible variance (ex: Blackjack en appliquant la stratégie de base) pour assurer une croissance lente mais garantie.</li>
+            </ul>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">4. Le pire ennemi du joueur : Le "Tilt"</h2>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 25px;">
+                Le "Tilt" est un terme issu du Poker qui désigne le moment où un joueur, frustré par une perte, perd son sang-froid et commence à jouer de manière irrationnelle (souvent en misant "tapis" pour se refaire immédiatement). Si vous perdez trois paris d'affilée, l'algorithme ne vous "doit" pas une victoire pour autant : les probabilités n'ont pas de mémoire. La meilleure défense contre le Tilt est de fermer la fenêtre, de profiter de la gratuité du site pour prendre du recul, et de revenir jouer le lendemain.
+            </p>
+            
+            <hr style="border: none; border-top: 1px solid #334155; margin: 40px 0;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="width: 50px; height: 50px; background-color: #00ccff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; color: #1a202c;">F</div>
+                <div>
+                    <p style="color: #fff; margin: 0; font-weight: bold;">Écrit par Florian</p>
+                    <p style="color: #888; margin: 0; font-size: 0.9em;">Étudiant en informatique et concepteur de StakeLite. Passionné par l'algorithmie et les modèles prédictifs.</p>
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="legal.html">Mentions Légales & Confidentialité</a>
+                <a href="contact.html">Contact</a>
+                <a href="faq.html">FAQ</a>
+                <a href="guides/index.html">Guides & Stratégies</a>
+            </div>
+            <div class="footer-copy">
+                <p>&copy; 2026 StakeLite. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

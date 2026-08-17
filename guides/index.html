@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StakeLite - Guides & Stratégies</title>
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <link rel="stylesheet" href="../style.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../main.js" defer></script>
+</head>
+<body>
+    <div id="login-overlay" class="overlay">
+        <div class="login-box" style="position: relative;">
+            <span onclick="document.getElementById('login-overlay').classList.remove('active')" style="position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #888;">&times;</span>
+            <h2 id="auth-title">Connexion à StakeLite</h2>
+            
+            <div class="auth-form">
+                <div id="pseudo-group" class="input-group" style="display: none;">
+                    <label>Pseudo</label>
+                    <input type="text" id="auth-pseudo" placeholder="">
+                </div>
+
+                <div class="input-group">
+                    <label>Adresse Email</label>
+                    <input type="email" id="auth-email" placeholder="exemple@mail.com">
+                </div>
+
+                <div class="input-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="auth-password" placeholder="••••••••">
+                </div>
+
+                <button id="auth-main-btn" class="main-btn green" onclick="handleAuth()">SE CONNECTER</button>
+            </div>
+
+            <p class="auth-switch">
+                <span id="auth-switch-text">Pas encore de compte ?</span> 
+                <a href="#" id="auth-switch-link" onclick="toggleAuthMode(event)">S'inscrire</a>
+            </p>
+        </div>
+    </div>
+    
+    <header>
+        <a href="../index.html" class="logo" style="text-decoration: none; color: var(--text-main);">STAKE<span>LITE</span></a>
+        
+        <div class="header-right">
+            <div id="guest-menu" style="display: none; gap: 15px; align-items: center;">
+                <button class="auth-btn login-btn" onclick="openAuthModal(true)">Se connecter</button>
+                <button class="auth-btn signup-btn" onclick="openAuthModal(false)">S'inscrire</button>
+            </div>
+
+            <div id="logged-in-menu" style="display: none; align-items: center;">
+                    <div class="user-menu" style="display: flex; align-items: center; gap: 15px; position: relative;">
+                        <div class="balances-container" id="balances-menu">
+                            <a href="../boutique.html" class="balance-box gc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-gc">0.00</span> 
+                                <span>GC</span>
+                            </a>
+                            <a href="../freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-fc">0.00</span> 
+                                <span>FC</span>
+                                <span class="plus-icon">+</span>
+                            </a>
+                        </div>
+                        <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
+                        <div class="dropdown" id="user-dropdown">
+                            <a href="../profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
+                                <div id="dropdown-pseudo">Joueur</div>
+                            </a>
+                            <button class="dropdown-btn" onclick="window.location.href='../boutique.html'" style="color: #ffffff;">Boutique</button>
+                            <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </header>
+
+    <main style="padding: 50px 20px; display: flex; flex-direction: column; align-items: center; width: 100%; min-height: 80vh;">
+        <!-- Fil d'Ariane -->
+        <div style="max-width: 1000px; width: 100%; text-align: left; margin-bottom: 10px; font-size: 0.95rem; color: #64748b;">
+            <a href="../index.html" style="color: #cbd5e1; text-decoration: none;">Accueil</a> 
+            <span style="margin: 0 10px;">/</span> 
+            <span style="color: #00ccff;">Guides & Stratégies</span>
+        </div>
+        <div style="text-align: center; margin-bottom: 50px; max-width: 800px;">
+            <h1 style="font-size: 36px; margin-bottom: 15px; font-weight: 900;">Guides & Stratégies</h1>
+            <p style="color: var(--text-sec); font-size: 16px; line-height: 1.6;">
+                Découvrez nos articles complets pour maîtriser les mathématiques du jeu, comprendre les probabilités et gérer vos jetons virtuels sur StakeLite.
+            </p>
+        </div>
+    
+        <div class="games-grid" style="max-width: 1000px; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); width: 100%;">
+            
+            <!-- Article 1 -->
+            <a href="ps_cote.html" style="text-decoration: none; color: inherit; background: rgba(255,255,255,0.02); border: 1px solid #334155; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; transition: transform 0.2s;">
+                <div style="font-size: 40px; margin-bottom: 15px;">⚽</div>
+                <h3 style="color: #fff; margin-bottom: 10px;">Comprendre les cotes des paris sportifs</h3>
+                <p style="color: #cbd5e1; font-size: 0.9em; line-height: 1.5; margin-bottom: 15px; flex-grow: 1;">
+                    Apprenez à lire les cotes décimales, à calculer vos gains potentiels et à analyser les probabilités mathématiques d'un match de football.
+                </p>
+                <span style="color: #00ccff; font-weight: bold; font-size: 0.9em;">Lire le guide →</span>
+            </a>
+    
+            <!-- Article 2 -->
+            <a href="bj_strategie.html" style="text-decoration: none; color: inherit; background: rgba(255,255,255,0.02); border: 1px solid #334155; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; transition: transform 0.2s;">
+                <div style="font-size: 40px; margin-bottom: 15px;">🃏</div>
+                <h3 style="color: #fff; margin-bottom: 10px;">La stratégie de base au Blackjack</h3>
+                <p style="color: #cbd5e1; font-size: 0.9em; line-height: 1.5; margin-bottom: 15px; flex-grow: 1;">
+                    Ne jouez plus au hasard. Découvrez comment optimiser chaque main face au croupier en utilisant les mathématiques et les statistiques.
+                </p>
+                <span style="color: #00ccff; font-weight: bold; font-size: 0.9em;">Lire le guide →</span>
+            </a>
+    
+            <!-- Article 3 -->
+            <a href="mines_proba.html" style="text-decoration: none; color: inherit; background: rgba(255,255,255,0.02); border: 1px solid #334155; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; transition: transform 0.2s;">
+                <div style="font-size: 40px; margin-bottom: 15px;">💣</div>
+                <h3 style="color: #fff; margin-bottom: 10px;">Mines : Probabilités et gestion du risque</h3>
+                <p style="color: #cbd5e1; font-size: 0.9em; line-height: 1.5; margin-bottom: 15px; flex-grow: 1;">
+                    Comment sont calculés les multiplicateurs ? Découvrez la différence de volatilité entre une grille à 1 mine et une grille à 10 mines.
+                </p>
+                <span style="color: #00ccff; font-weight: bold; font-size: 0.9em;">Lire le guide →</span>
+            </a>
+    
+            <!-- Article 4 -->
+            <a href="gestion_bankroll.html" style="text-decoration: none; color: inherit; background: rgba(255,255,255,0.02); border: 1px solid #334155; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; transition: transform 0.2s;">
+                <div style="font-size: 40px; margin-bottom: 15px;">💰</div>
+                <h3 style="color: #fff; margin-bottom: 10px;">Gérer sa Bankroll (FC & GC)</h3>
+                <p style="color: #cbd5e1; font-size: 0.9em; line-height: 1.5; margin-bottom: 15px; flex-grow: 1;">
+                    Les secrets pour faire fructifier vos FreeCoins sans faire banqueroute. Apprenez la discipline de mise et la gestion d'un portefeuille virtuel.
+                </p>
+                <span style="color: #00ccff; font-weight: bold; font-size: 0.9em;">Lire le guide →</span>
+            </a>
+    
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="../legal.html">Mentions Légales & Confidentialité</a>
+                <a href="../contact.html">Contact</a>
+                <a href="../faq.html">FAQ</a>
+                <a href="index.html">Guides & Stratégies</a>
+            </div>
+            <div class="footer-copy">
+                <p>&copy; 2026 StakeLite. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

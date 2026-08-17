@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StakeLite - Les Mathématiques des Mines</title>
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <link rel="stylesheet" href="../style.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../main.js" defer></script>
+</head>
+<body>
+    <div id="login-overlay" class="overlay">
+        <div class="login-box" style="position: relative;">
+            <span onclick="document.getElementById('login-overlay').classList.remove('active')" style="position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #888;">&times;</span>
+            <h2 id="auth-title">Connexion à StakeLite</h2>
+            
+            <div class="auth-form">
+                <div id="pseudo-group" class="input-group" style="display: none;">
+                    <label>Pseudo</label>
+                    <input type="text" id="auth-pseudo" placeholder="">
+                </div>
+
+                <div class="input-group">
+                    <label>Adresse Email</label>
+                    <input type="email" id="auth-email" placeholder="exemple@mail.com">
+                </div>
+
+                <div class="input-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="auth-password" placeholder="••••••••">
+                </div>
+
+                <button id="auth-main-btn" class="main-btn green" onclick="handleAuth()">SE CONNECTER</button>
+            </div>
+
+            <p class="auth-switch">
+                <span id="auth-switch-text">Pas encore de compte ?</span> 
+                <a href="#" id="auth-switch-link" onclick="toggleAuthMode(event)">S'inscrire</a>
+            </p>
+        </div>
+    </div>
+    
+    <header>
+        <a href="../index.html" class="logo" style="text-decoration: none; color: var(--text-main);">STAKE<span>LITE</span></a>
+        
+        <div class="header-right">
+            <div id="guest-menu" style="display: none; gap: 15px; align-items: center;">
+                <button class="auth-btn login-btn" onclick="openAuthModal(true)">Se connecter</button>
+                <button class="auth-btn signup-btn" onclick="openAuthModal(false)">S'inscrire</button>
+            </div>
+
+            <div id="logged-in-menu" style="display: none; align-items: center;">
+                    <div class="user-menu" style="display: flex; align-items: center; gap: 15px; position: relative;">
+                        <div class="balances-container" id="balances-menu">
+                            <a href="../boutique.html" class="balance-box gc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-gc">0.00</span> 
+                                <span>GC</span>
+                            </a>
+                            <a href="../freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-fc">0.00</span> 
+                                <span>FC</span>
+                                <span class="plus-icon">+</span>
+                            </a>
+                        </div>
+                        <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
+                        <div class="dropdown" id="user-dropdown">
+                            <a href="../profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
+                                <div id="dropdown-pseudo">Joueur</div>
+                            </a>
+                            <button class="dropdown-btn" onclick="window.location.href='../boutique.html'" style="color: #ffffff;">Boutique</button>
+                            <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </header>
+
+    <main style="padding: 50px 20px; display: flex; flex-direction: column; align-items: center; width: 100%;">
+        <!-- Fil d'Ariane -->
+        <div style="max-width: 800px; width: 100%; text-align: left; margin-bottom: 20px; font-size: 0.95rem; color: #64748b;">
+            <a href="../index.html" style="color: #cbd5e1; text-decoration: none;">Accueil</a> 
+            <span style="margin: 0 10px;">/</span> 
+            <a href="index.html" style="color: #cbd5e1; text-decoration: none;">Guides & Stratégies</a> 
+            <span style="margin: 0 10px;">/</span> 
+            <span style="color: #ffcc00;">Mathématiques des Mines</span>
+        </div>
+        <article style="max-width: 800px; width: 100%; text-align: left; background: rgba(255,255,255,0.02); border: 1px solid #334155; border-radius: 12px; padding: 40px;">
+            <h1 style="color: #ffcc00; margin-bottom: 20px; font-size: 2.2em;">Jeu des Mines : Maîtriser la Volatilité et le Risque</h1>
+            
+            <p style="color: #cbd5e1; line-height: 1.8; font-size: 1.1em; margin-bottom: 25px;">
+                Le jeu des Mines est l'incarnation pure de la théorie des probabilités appliquées. Contrairement aux paris sportifs soumis aux aléas humains, ou au Blackjack influencé par la dynamique d'un sabot de cartes, les Mines reposent sur un modèle mathématique fixe et inviolable généré par nos serveurs de jeu. Comprendre ce modèle est indispensable pour optimiser ses gains en GoldCoins.
+            </p>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">Le calcul dynamique des multiplicateurs</h2>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 20px;">
+                Dans la grille standard de StakeLite, chaque case retournée recalcule instantanément votre multiplicateur de gain. Ce multiplicateur n'est pas aléatoire : il correspond à l'inverse mathématique de la probabilité de tirer un diamant, amputé d'un "House Edge" (l'avantage maison) extrêmement faible, fixé à 1% sur notre plateforme pour maintenir l'économie virtuelle.
+            </p>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 25px;">
+                Au premier clic, le calcul est simple : si la grille contient 25 cases dont 3 mines, vous avez 22 chances sur 25 de tomber sur un diamant (soit 88%). Le multiplicateur associé sera donc faible, car le risque est minime. Cependant, à chaque fois qu'un diamant est retiré du plateau, les probabilités de tomber sur une mine lors du clic suivant augmentent drastiquement. C'est cet effet cumulatif qui crée des multiplicateurs explosifs.
+            </p>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">Gérer la configuration de la grille (Volatilité)</h2>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 20px;">
+                Le concept clé des Mines est la <strong>volatilité</strong>, que vous contrôlez entièrement en choisissant le nombre de mines avant la partie (1, 3, 5 ou 10 mines).
+            </p>
+            <div style="background: rgba(255, 153, 0, 0.1); border-left: 4px solid #ffcc00; padding: 15px; margin-bottom: 25px; border-radius: 4px;">
+                <ul style="color: #cbd5e1; line-height: 1.8; margin-left: 20px; margin-bottom: 0;">
+                    <li style="margin-bottom: 10px;"><strong>Basse volatilité (1 ou 3 mines) :</strong> Idéal pour faire croître une petite bankroll de FreeCoins de manière stable. Le taux de réussite est élevé, mais il faudra enchaîner de nombreux clics pour espérer doubler sa mise (x2).</li>
+                    <li><strong>Haute volatilité (10 mines) :</strong> C'est la configuration des joueurs audacieux. Le terrain est miné à près de 40%. Trouver seulement 3 ou 4 diamants consécutifs suffit à générer des multiplicateurs immenses (x5, x10). Le taux d'échec est élevé, mais la récompense est massive.</li>
+                </ul>
+            </div>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">L'impact psychologique de l'encaissement (Cashout)</h2>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 25px;">
+                La plus grande difficulté du jeu des Mines n'est pas de trouver les diamants, c'est de savoir s'arrêter. La cupidité pousse souvent le joueur à cliquer "une dernière fois" pour arrondir le multiplicateur, ce qui mène statistiquement à l'explosion. Une stratégie viable consiste à se fixer une limite mathématique stricte avant même le début de la partie : <em>"Je joue avec 5 mines, et j'encaisse automatiquement au 3ème diamant, peu importe le motif."</em> Cette discipline froide et calculée est la seule barrière efficace contre la variance.
+            </p>
+    
+            <hr style="border: none; border-top: 1px solid #334155; margin: 40px 0;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="width: 50px; height: 50px; background-color: #00ccff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; color: #1a202c;">F</div>
+                <div>
+                    <p style="color: #fff; margin: 0; font-weight: bold;">Écrit par Florian</p>
+                    <p style="color: #888; margin: 0; font-size: 0.9em;">Étudiant en informatique et concepteur de StakeLite. Passionné par l'algorithmie et les modèles prédictifs.</p>
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="legal.html">Mentions Légales & Confidentialité</a>
+                <a href="contact.html">Contact</a>
+                <a href="faq.html">FAQ</a>
+                <a href="guides/index.html">Guides & Stratégies</a>
+            </div>
+            <div class="footer-copy">
+                <p>&copy; 2026 StakeLite. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
