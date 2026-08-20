@@ -6,8 +6,8 @@
     <title>StakeLite - Panel Admin</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="style.css">
+    <link rel="canonical" href="https://stakelite.fr/admin">
     
-    <!-- Supabase & Scripts principaux -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="main.js" defer></script>
 </head>
@@ -66,7 +66,7 @@
         </div>
 
         <div style="margin-top: 30px;">
-            <a href="index.html" style="color: #888; text-decoration: none; font-size: 0.9rem;">← Retour à l'accueil</a>
+            <a href="/" style="color: #888; text-decoration: none; font-size: 0.9rem;">← Retour à l'accueil</a>
         </div>
     </div>
 
@@ -91,7 +91,7 @@
                         // Accès refusé
                         document.getElementById('msg-statut').style.color = '#ff4444';
                         document.getElementById('msg-statut').innerText = "Accès refusé. Redirection...";
-                        setTimeout(() => window.location.href = 'index.html', 2000);
+                        setTimeout(() => window.location.href = '/', 2000);
                     }
                 } catch (err) {
                     document.getElementById('msg-statut').innerText = "Erreur de connexion à la base de données.";
@@ -100,7 +100,7 @@
                 clearInterval(verifAdmin);
                 document.getElementById('msg-statut').style.color = '#ff4444';
                 document.getElementById('msg-statut').innerText = "Vous devez être connecté. Redirection...";
-                setTimeout(() => window.location.href = 'index.html', 2000);
+                setTimeout(() => window.location.href = '/', 2000);
             }
         }, 500);
 

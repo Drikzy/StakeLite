@@ -6,61 +6,77 @@
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>https://stakelite.fr/boutique.html</loc>
+        <loc>https://stakelite.fr/boutique</loc>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://stakelite.fr/freecoins.html</loc>
+        <loc>https://stakelite.fr/freecoins</loc>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://stakelite.fr/profil</loc>
         <priority>0.8</priority>
     </url>
 
     <!-- Jeux -->
     <url>
-        <loc>https://stakelite.fr/jeux/mines.html</loc>
+        <loc>https://stakelite.fr/jeux/mines</loc>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://stakelite.fr/jeux/blackjack.html</loc>
+        <loc>https://stakelite.fr/jeux/blackjack</loc>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://stakelite.fr/jeux/paris.html</loc>
+        <loc>https://stakelite.fr/jeux/paris</loc>
         <priority>0.9</priority>
     </url>
 
-    <!-- Pôle Guides & Stratégies (Très important pour AdSense) -->
+    <!-- Pôle Guides & Stratégies -->
     <url>
-        <loc>https://stakelite.fr/guides/index.html</loc>
+        <loc>https://stakelite.fr/guides/</loc>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://stakelite.fr/guides/ps_cote.html</loc>
+        <loc>https://stakelite.fr/guides/ps_cote</loc>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://stakelite.fr/guides/bj_strategie.html</loc>
+        <loc>https://stakelite.fr/guides/bj_strategie</loc>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://stakelite.fr/guides/mines_proba.html</loc>
+        <loc>https://stakelite.fr/guides/mines_proba</loc>
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://stakelite.fr/guides/gestion_bankroll.html</loc>
+        <loc>https://stakelite.fr/guides/gestion_bankroll</loc>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://stakelite.fr/guides/provably_fair</loc>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://stakelite.fr/guides/sophisme_joueur</loc>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://stakelite.fr/guides/kelly_critere</loc>
         <priority>0.8</priority>
     </url>
 
     <!-- Pages Légales -->
     <url>
-        <loc>https://stakelite.fr/faq.html</loc>
+        <loc>https://stakelite.fr/faq</loc>
         <priority>0.6</priority>
     </url>
     <url>
-        <loc>https://stakelite.fr/legal.html</loc>
+        <loc>https://stakelite.fr/legal</loc>
         <priority>0.5</priority>
     </url>
     <url>
-        <loc>https://stakelite.fr/contact.html</loc>
+        <loc>https://stakelite.fr/contact</loc>
         <priority>0.5</priority>
     </url>
 </urlset>

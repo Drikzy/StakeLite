@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StakeLite - Comprendre le Provably Fair</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="canonical" href="https://stakelite.fr/guides/provably_fair">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/main.js" defer></script>
+</head>
+<body>
+    <div id="login-overlay" class="overlay">
+        <div class="login-box" style="position: relative;">
+            <span onclick="document.getElementById('login-overlay').classList.remove('active')" style="position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #888;">&times;</span>
+            <h2 id="auth-title">Connexion à StakeLite</h2>
+            
+            <div class="auth-form">
+                <div id="pseudo-group" class="input-group" style="display: none;">
+                    <label>Pseudo</label>
+                    <input type="text" id="auth-pseudo" placeholder="">
+                </div>
+
+                <div class="input-group">
+                    <label>Adresse Email</label>
+                    <input type="email" id="auth-email" placeholder="exemple@mail.com">
+                </div>
+
+                <div class="input-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="auth-password" placeholder="••••••••">
+                </div>
+
+                <button id="auth-main-btn" class="main-btn green" onclick="handleAuth()">SE CONNECTER</button>
+            </div>
+
+            <p class="auth-switch">
+                <span id="auth-switch-text">Pas encore de compte ?</span> 
+                <a href="#" id="auth-switch-link" onclick="toggleAuthMode(event)">S'inscrire</a>
+            </p>
+        </div>
+    </div>
+    
+    <header>
+        <a href="/" class="logo" style="text-decoration: none; color: var(--text-main);">STAKE<span>LITE</span></a>
+        
+        <div class="header-right">
+            <div id="guest-menu" style="display: none; gap: 15px; align-items: center;">
+                <button class="auth-btn login-btn" onclick="openAuthModal(true)">Se connecter</button>
+                <button class="auth-btn signup-btn" onclick="openAuthModal(false)">S'inscrire</button>
+            </div>
+
+            <div id="logged-in-menu" style="display: none; align-items: center;">
+                    <div class="user-menu" style="display: flex; align-items: center; gap: 15px; position: relative;">
+                        <div class="balances-container" id="balances-menu">
+                            <a href="/boutique.html" class="balance-box gc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-gc">0.00</span> 
+                                <span>GC</span>
+                            </a>
+                            <a href="/freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-fc">0.00</span> 
+                                <span>FC</span>
+                                <span class="plus-icon">+</span>
+                            </a>
+                        </div>
+                        <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
+                        <div class="dropdown" id="user-dropdown">
+                            <a href="/profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
+                                <div id="dropdown-pseudo">Joueur</div>
+                            </a>
+                            <button class="dropdown-btn" onclick="window.location.href='/boutique.html'" style="color: #ffffff;">Boutique</button>
+                            <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </header>
+
+    <main style="padding: 50px 20px; display: flex; flex-direction: column; align-items: center; width: 100%;">
+        <!-- Fil d'Ariane -->
+        <div style="max-width: 800px; width: 100%; text-align: left; margin-bottom: 20px; font-size: 0.95rem; color: #64748b;">
+            <a href="/" style="color: #cbd5e1; text-decoration: none;">Accueil</a> 
+            <span style="margin: 0 10px;">/</span> 
+            <a href="/guides" style="color: #cbd5e1; text-decoration: none;">Guides & Stratégies</a> 
+            <span style="margin: 0 10px;">/</span> 
+            <span style="color: #3b82f6;">Algorithme Provably Fair</span>
+        </div>
+        
+        <article style="max-width: 800px; width: 100%; text-align: left; background: rgba(255,255,255,0.02); border: 1px solid #334155; border-radius: 12px; padding: 40px;">
+            <h1 style="color: #3b82f6; margin-bottom: 20px; font-size: 2.2em;">Comprendre le "Provably Fair" : La cryptographie au service de l'équité</h1>
+            
+            <p style="color: #cbd5e1; line-height: 1.8; font-size: 1.1em; margin-bottom: 25px;">
+                Historiquement, la plus grande crainte des joueurs en ligne a toujours été : <em>« L'algorithme est-il truqué pour me faire perdre ? »</em>. Pour résoudre ce problème de confiance, l'industrie moderne a développé le système <strong>Provably Fair</strong> (Prouvablement Équitable). Ce n'est pas une simple promesse, mais une démonstration cryptographique infaillible permettant à chaque joueur de vérifier l'intégrité de ses parties.
+            </p>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">1. Comment fonctionne le hasard cryptographique ?</h2>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 20px;">
+                Le principe du Provably Fair repose sur l'algorithme de hachage <strong>SHA-256</strong> (le même utilisé par le réseau Bitcoin). Au lieu que le serveur décide seul du résultat de votre partie, le tirage final est généré par la combinaison de trois éléments :
+            </p>
+            <ul style="color: #cbd5e1; line-height: 1.8; margin-bottom: 25px; margin-left: 20px;">
+                <li><strong>Server Seed (Graine du Serveur) :</strong> Une longue chaîne de caractères générée par la plateforme avant votre pari.</li>
+                <li><strong>Client Seed (Graine du Joueur) :</strong> Une chaîne de caractères générée par votre propre navigateur (ou modifiable par vos soins).</li>
+                <li><strong>Nonce :</strong> Un compteur qui augmente de 1 à chaque nouveau pari, garantissant que chaque tirage est unique.</li>
+            </ul>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">2. L'engagement (The Commitment Scheme)</h2>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 20px;">
+                La magie du système réside dans son ordre d'exécution. Avant même que vous ne cliquiez sur "Miser", le serveur a déjà généré sa <em>Server Seed</em>, mais il ne vous la donne pas en clair. Il vous donne son <strong>Empreinte Cryptographique (Hash)</strong>. 
+            </p>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 25px;">
+                C'est comme si le serveur écrivait le résultat dans une enveloppe scellée et la posait sur la table devant vous. Il est mathématiquement impossible pour le serveur de modifier le contenu de l'enveloppe (la Server Seed) après que vous ayez placé votre pari, car l'empreinte Hash changerait et prouverait la triche. De votre côté, vous ne pouvez pas lire le résultat à l'avance grâce au cryptage.
+            </p>
+    
+            <div style="background: rgba(59, 130, 246, 0.1); border-left: 4px solid #3b82f6; padding: 15px; margin-bottom: 25px; border-radius: 4px;">
+                <p style="color: #cbd5e1; margin-bottom: 0;">
+                    <strong>La formule de génération :</strong><br>
+                    Résultat Final = HASH ( Server Seed + Client Seed + Nonce )<br><br>
+                    Puisque <em>votre</em> navigateur fournit une partie de l'équation (la Client Seed) au moment exact du clic, il est absolument impossible pour l'algorithme du jeu de prédire ou de truquer le résultat final contre vous.
+                </p>
+            </div>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">3. La vérification a posteriori</h2>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 25px;">
+                Une fois votre session de jeu terminée, vous pouvez "révéler" l'enveloppe. La plateforme dévoile la <em>Server Seed</em> en clair. Vous pouvez alors utiliser un vérificateur indépendant sur internet (ou coder votre propre script Python/JavaScript) pour hacher la Server Seed révélée. Si le résultat correspond au Hash qui vous avait été donné avant le pari, l'équité est prouvée à 100%. Aucune manipulation humaine ou algorithmique n'a eu lieu.
+            </p>
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/legal.html">Mentions Légales & Confidentialité</a>
+                <a href="/contact.html">Contact</a>
+                <a href="/faq.html">FAQ</a>
+                <a href="/guides">Guides & Stratégies</a>
+            </div>
+            <div class="footer-copy">
+                <p>&copy; 2026 StakeLite. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

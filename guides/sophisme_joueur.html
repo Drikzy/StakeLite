@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StakeLite - Le Sophisme du Joueur</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="canonical" href="https://stakelite.fr/guides/sophisme_joueur">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/main.js" defer></script>
+</head>
+<body>
+    <div id="login-overlay" class="overlay">
+        <div class="login-box" style="position: relative;">
+            <span onclick="document.getElementById('login-overlay').classList.remove('active')" style="position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #888;">&times;</span>
+            <h2 id="auth-title">Connexion à StakeLite</h2>
+            
+            <div class="auth-form">
+                <div id="pseudo-group" class="input-group" style="display: none;">
+                    <label>Pseudo</label>
+                    <input type="text" id="auth-pseudo" placeholder="">
+                </div>
+
+                <div class="input-group">
+                    <label>Adresse Email</label>
+                    <input type="email" id="auth-email" placeholder="exemple@mail.com">
+                </div>
+
+                <div class="input-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="auth-password" placeholder="••••••••">
+                </div>
+
+                <button id="auth-main-btn" class="main-btn green" onclick="handleAuth()">SE CONNECTER</button>
+            </div>
+
+            <p class="auth-switch">
+                <span id="auth-switch-text">Pas encore de compte ?</span> 
+                <a href="#" id="auth-switch-link" onclick="toggleAuthMode(event)">S'inscrire</a>
+            </p>
+        </div>
+    </div>
+    
+    <header>
+        <a href="/" class="logo" style="text-decoration: none; color: var(--text-main);">STAKE<span>LITE</span></a>
+        
+        <div class="header-right">
+            <div id="guest-menu" style="display: none; gap: 15px; align-items: center;">
+                <button class="auth-btn login-btn" onclick="openAuthModal(true)">Se connecter</button>
+                <button class="auth-btn signup-btn" onclick="openAuthModal(false)">S'inscrire</button>
+            </div>
+
+            <div id="logged-in-menu" style="display: none; align-items: center;">
+                    <div class="user-menu" style="display: flex; align-items: center; gap: 15px; position: relative;">
+                        <div class="balances-container" id="balances-menu">
+                            <a href="/boutique.html" class="balance-box gc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-gc">0.00</span> 
+                                <span>GC</span>
+                            </a>
+                            <a href="/freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-fc">0.00</span> 
+                                <span>FC</span>
+                                <span class="plus-icon">+</span>
+                            </a>
+                        </div>
+                        <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
+                        <div class="dropdown" id="user-dropdown">
+                            <a href="/profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
+                                <div id="dropdown-pseudo">Joueur</div>
+                            </a>
+                            <button class="dropdown-btn" onclick="window.location.href='/boutique.html'" style="color: #ffffff;">Boutique</button>
+                            <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </header>
+
+    <main style="padding: 50px 20px; display: flex; flex-direction: column; align-items: center; width: 100%;">
+        <!-- Fil d'Ariane -->
+        <div style="max-width: 800px; width: 100%; text-align: left; margin-bottom: 20px; font-size: 0.95rem; color: #64748b;">
+            <a href="/" style="color: #cbd5e1; text-decoration: none;">Accueil</a> 
+            <span style="margin: 0 10px;">/</span> 
+            <a href="/guides" style="color: #cbd5e1; text-decoration: none;">Guides & Stratégies</a> 
+            <span style="margin: 0 10px;">/</span> 
+            <span style="color: #f97316;">Le Sophisme du Joueur</span>
+        </div>
+        
+        <article style="max-width: 800px; width: 100%; text-align: left; background: rgba(255,255,255,0.02); border: 1px solid #334155; border-radius: 12px; padding: 40px;">
+            <h1 style="color: #f97316; margin-bottom: 20px; font-size: 2.2em;">Le Sophisme du Joueur : Le piège de l'illusion des séries</h1>
+            
+            <p style="color: #cbd5e1; line-height: 1.8; font-size: 1.1em; margin-bottom: 25px;">
+                Le cerveau humain est programmé pour trouver des modèles réguliers dans son environnement, même lorsqu'il n'y en a pas. Dans le domaine des probabilités, ce réflexe naturel donne naissance au biais cognitif le plus dangereux pour un joueur : <strong>Le Sophisme du Joueur</strong> (ou <em>Gambler's Fallacy</em>).
+            </p>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">1. Qu'est-ce que l'illusion des séries ?</h2>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 20px;">
+                Imaginez que vous jouez à la roulette ou au jeu de Pile ou Face. Le résultat est tombé sur "Noir" lors des 5 derniers tours. Que pariez-vous au prochain tour ? Une immense majorité de personnes ressentira l'envie irrépressible de miser sur "Rouge", intimement convaincue que <em>« le Rouge est en retard, il doit forcément tomber maintenant »</em>.
+            </p>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 25px;">
+                C'est une erreur logique absolue. Le Sophisme du Joueur est la croyance fausse qu'un événement aléatoire est <strong>moins susceptible</strong> de se produire s'il s'est produit fréquemment dans le passé.
+            </p>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">2. L'indépendance statistique (La roulette n'a pas de mémoire)</h2>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 20px;">
+                Dans les jeux de hasard purs (Mines, Roulette, Dés), chaque tour est ce qu'on appelle en mathématiques un <strong>événement indépendant</strong>. L'algorithme ne regarde jamais l'historique des parties précédentes pour décider du tirage actuel.
+            </p>
+            
+            <div style="background: rgba(249, 115, 22, 0.1); border-left: 4px solid #f97316; padding: 15px; margin-bottom: 25px; border-radius: 4px;">
+                <p style="color: #cbd5e1; margin-bottom: 0;">
+                    <strong>La réalité mathématique :</strong><br>
+                    Même si le Noir est tombé 10 fois de suite, la probabilité que le Rouge sorte au 11ème tour est et restera de <strong>exactement 50%</strong> (en ignorant le zéro). La bille, les dés ou l'algorithme informatique n'ont ni mémoire, ni sens de "l'équilibre" à court terme.
+                </p>
+            </div>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">3. La mauvaise interprétation de la Loi des Grands Nombres</h2>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 20px;">
+                Les victimes de ce sophisme s'appuient souvent (à tort) sur la Loi des Grands Nombres. Ils se disent : <em>« Sur le long terme, il doit y avoir autant de Rouges que de Noirs, donc la variance va se corriger d'elle-même »</em>. 
+            </p>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 25px;">
+                C'est vrai sur un échantillon de 1 000 000 de lancers : la moyenne convergera vers 50%. Mais cette convergence ne se fait pas en "compensant" les séries du passé à court terme. Elle se fait simplement en noyant cette petite anomalie de 5 "Noirs" dans une masse infinie de nouveaux lancers équilibrés. Accepter que le hasard est chaotique et imprévisible est la première étape pour devenir un joueur analytique discipliné.
+            </p>
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/legal.html">Mentions Légales & Confidentialité</a>
+                <a href="/contact.html">Contact</a>
+                <a href="/faq.html">FAQ</a>
+                <a href="/guides">Guides & Stratégies</a>
+            </div>
+            <div class="footer-copy">
+                <p>&copy; 2026 StakeLite. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

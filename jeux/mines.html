@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StakeLite - Mines</title>
-    <link rel="icon" type="image/png" href="../favicon.png">
-    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="canonical" href="https://stakelite.fr/jeux/mines">
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="../main.js" defer></script>
+    <script src="/main.js" defer></script>
     <script src="mines.js" defer></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6973249683175377" crossorigin="anonymous"></script>
 </head>
@@ -45,7 +46,7 @@
         </div>
     </div>
     <header>
-        <a href="../index.html" class="logo" style="text-decoration: none; color: var(--text-main);">STAKE<span>LITE</span></a>
+        <a href="/" class="logo" style="text-decoration: none; color: var(--text-main);">STAKE<span>LITE</span></a>
         
         <div class="header-right">
             <div id="guest-menu" style="display: none; gap: 15px; align-items: center;">
@@ -56,11 +57,11 @@
             <div id="logged-in-menu" style="display: none; align-items: center;">
                     <div class="user-menu" style="display: flex; align-items: center; gap: 15px; position: relative;">
                         <div class="balances-container" id="balances-menu">
-                            <a href="../boutique.html" class="balance-box gc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <a href="/boutique.html" class="balance-box gc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
                                 <span id="global-balance-gc">0.00</span> 
                                 <span>GC</span>
                             </a>
-                            <a href="../freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <a href="/freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
                                 <span id="global-balance-fc">0.00</span> 
                                 <span>FC</span>
                                 <span class="plus-icon">+</span>
@@ -68,10 +69,10 @@
                         </div>
                         <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
                         <div class="dropdown" id="user-dropdown">
-                            <a href="../profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
+                            <a href="/profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
                                 <div id="dropdown-pseudo">Joueur</div>
                             </a>
-                            <button class="dropdown-btn" onclick="window.location.href='boutique.html'" style="color: #ffffff;">Boutique</button>
+                            <button class="dropdown-btn" onclick="window.location.href='/boutique.html'" style="color: #ffffff;">Boutique</button>
                             <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
                         </div>
                     </div>
@@ -134,7 +135,7 @@
             </p>
 
             <div style="margin-top: 20px; text-align: center;">
-                <a href="../guides/mines_proba.html" style="color: #10b981; text-decoration: none; font-weight: bold; border: 1px solid #10b981; padding: 10px 20px; border-radius: 6px; display: inline-block; transition: background 0.2s;">
+                <a href="/guides/mines_proba.html" style="color: #10b981; text-decoration: none; font-weight: bold; border: 1px solid #10b981; padding: 10px 20px; border-radius: 6px; display: inline-block; transition: background 0.2s;">
                     📚 Lire notre guide : Mathématiques et Volatilité
                 </a>
             </div>
@@ -172,10 +173,10 @@
     <footer class="site-footer">
         <div class="footer-content">
             <div class="footer-links">
-                <a href="legal.html">Mentions Légales & Confidentialité</a>
-                <a href="contact.html">Contact</a>
-                <a href="faq.html">FAQ</a>
-                <a href="guides/index.html">Guides & Stratégies</a>
+                <a href="/legal.html">Mentions Légales & Confidentialité</a>
+                <a href="/contact.html">Contact</a>
+                <a href="/faq.html">FAQ</a>
+                <a href="/guides">Guides & Stratégies</a>
             </div>
             <div class="footer-copy">
                 <p>&copy; 2026 StakeLite. Tous droits réservés.</p>

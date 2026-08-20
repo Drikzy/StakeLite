@@ -2,7 +2,7 @@ async function checkAccess() {
     const { data: { session } } = await client.auth.getSession();
     
     if (!session) {
-        window.location.href = "index.html";
+        window.location.href = "/";
         return;
     }
 
@@ -42,7 +42,7 @@ async function updateProfile(event) {
     const { data: { session } } = await client.auth.getSession();
     if (!session) {
         showToast("Session expirée. Veuillez vous reconnecter.", "error");
-        setTimeout(() => window.location.href = "index.html", 2000);
+        setTimeout(() => window.location.href = "/", 2000);
         return;
     }
     const currentEmail = session.user.email;

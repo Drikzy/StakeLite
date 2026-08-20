@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StakeLite - Le Critère de Kelly</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="canonical" href="https://stakelite.fr/guides/kelly_critere">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/main.js" defer></script>
+</head>
+<body>
+    <div id="login-overlay" class="overlay">
+        <div class="login-box" style="position: relative;">
+            <span onclick="document.getElementById('login-overlay').classList.remove('active')" style="position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #888;">&times;</span>
+            <h2 id="auth-title">Connexion à StakeLite</h2>
+            
+            <div class="auth-form">
+                <div id="pseudo-group" class="input-group" style="display: none;">
+                    <label>Pseudo</label>
+                    <input type="text" id="auth-pseudo" placeholder="">
+                </div>
+
+                <div class="input-group">
+                    <label>Adresse Email</label>
+                    <input type="email" id="auth-email" placeholder="exemple@mail.com">
+                </div>
+
+                <div class="input-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="auth-password" placeholder="••••••••">
+                </div>
+
+                <button id="auth-main-btn" class="main-btn green" onclick="handleAuth()">SE CONNECTER</button>
+            </div>
+
+            <p class="auth-switch">
+                <span id="auth-switch-text">Pas encore de compte ?</span> 
+                <a href="#" id="auth-switch-link" onclick="toggleAuthMode(event)">S'inscrire</a>
+            </p>
+        </div>
+    </div>
+    
+    <header>
+        <a href="/" class="logo" style="text-decoration: none; color: var(--text-main);">STAKE<span>LITE</span></a>
+        
+        <div class="header-right">
+            <div id="guest-menu" style="display: none; gap: 15px; align-items: center;">
+                <button class="auth-btn login-btn" onclick="openAuthModal(true)">Se connecter</button>
+                <button class="auth-btn signup-btn" onclick="openAuthModal(false)">S'inscrire</button>
+            </div>
+
+            <div id="logged-in-menu" style="display: none; align-items: center;">
+                    <div class="user-menu" style="display: flex; align-items: center; gap: 15px; position: relative;">
+                        <div class="balances-container" id="balances-menu">
+                            <a href="/boutique.html" class="balance-box gc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-gc">0.00</span> 
+                                <span>GC</span>
+                            </a>
+                            <a href="/freecoins.html" class="balance-box fc-box" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span id="global-balance-fc">0.00</span> 
+                                <span>FC</span>
+                                <span class="plus-icon">+</span>
+                            </a>
+                        </div>
+                        <div class="avatar" id="user-avatar" onclick="toggleUserMenu()">?</div>
+                        <div class="dropdown" id="user-dropdown">
+                            <a href="/profil.html" class="dropdown-header" style="text-decoration: none; display: block; cursor: pointer; transition: background-color 0.2s;">
+                                <div id="dropdown-pseudo">Joueur</div>
+                            </a>
+                            <button class="dropdown-btn" onclick="window.location.href='/boutique.html'" style="color: #ffffff;">Boutique</button>
+                            <button class="dropdown-btn" onclick="logout()">Se déconnecter</button>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </header>
+
+    <main style="padding: 50px 20px; display: flex; flex-direction: column; align-items: center; width: 100%;">
+        <!-- Fil d'Ariane -->
+        <div style="max-width: 800px; width: 100%; text-align: left; margin-bottom: 20px; font-size: 0.95rem; color: #64748b;">
+            <a href="/" style="color: #cbd5e1; text-decoration: none;">Accueil</a> 
+            <span style="margin: 0 10px;">/</span> 
+            <a href="/guides" style="color: #cbd5e1; text-decoration: none;">Guides & Stratégies</a> 
+            <span style="margin: 0 10px;">/</span> 
+            <span style="color: #a855f7;">Le Critère de Kelly</span>
+        </div>
+        
+        <article style="max-width: 800px; width: 100%; text-align: left; background: rgba(255,255,255,0.02); border: 1px solid #334155; border-radius: 12px; padding: 40px;">
+            <h1 style="color: #a855f7; margin-bottom: 20px; font-size: 2.2em;">Le Critère de Kelly : Calculer la Mise Mathématiquement Parfaite</h1>
+            
+            <p style="color: #cbd5e1; line-height: 1.8; font-size: 1.1em; margin-bottom: 25px;">
+                Comment savoir exactement combien miser sur un pari ? La majorité des joueurs parient à l'instinct ou utilisent une mise fixe (Flat Betting). Pourtant, en 1956, le chercheur John Larry Kelly Jr. a publié une formule mathématique révolutionnaire permettant de déterminer le pourcentage optimal de sa bankroll à engager pour maximiser la croissance de son capital tout en évitant la banqueroute.
+            </p>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">1. La notion de "Value" (Valeur)</h2>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 20px;">
+                Le Critère de Kelly ne fonctionne que si vous avez un avantage mathématique sur le bookmaker, ce qu'on appelle la <strong>Value</strong>. Cela signifie que votre propre estimation des probabilités qu'un événement se réalise doit être supérieure à la probabilité implicite calculée par la cote. Si vous pariez "au hasard" ou sur des cotes où vous n'avez pas l'avantage, la formule de Kelly vous indiquera toujours de miser 0.
+            </p>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">2. La Formule Mathématique</h2>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 20px;">
+                La formule de base adaptée aux cotes décimales (utilisées sur StakeLite) est la suivante :<br>
+                <code style="display: block; background: #0f172a; padding: 10px; border-radius: 6px; margin: 15px 0; font-size: 1.2em; color: #a855f7;">f* = p - [ q / (C - 1) ]</code>
+            </p>
+            <ul style="color: #cbd5e1; line-height: 1.8; margin-bottom: 25px; margin-left: 20px;">
+                <li><strong>f*</strong> : Le pourcentage de votre bankroll totale à miser.</li>
+                <li><strong>p</strong> : La probabilité de gagner (selon votre propre analyse, entre 0 et 1).</li>
+                <li><strong>q</strong> : La probabilité de perdre (soit 1 - p).</li>
+                <li><strong>C</strong> : La cote décimale proposée pour le pari.</li>
+            </ul>
+    
+            <div style="background: rgba(168, 85, 247, 0.1); border-left: 4px solid #a855f7; padding: 15px; margin-bottom: 25px; border-radius: 4px;">
+                <p style="color: #cbd5e1; margin-bottom: 0;">
+                    <strong>Exemple concret de calcul :</strong><br>
+                    StakeLite propose une cote de <strong>2.00</strong> pour la victoire d'une équipe. Selon vos statistiques, cette équipe a en réalité <strong>55%</strong> de chances de gagner (p = 0.55, et q = 0.45).<br><br>
+                    Calcul : f* = 0.55 - [ 0.45 / (2.00 - 1) ]<br>
+                    f* = 0.55 - 0.45 = <strong>0.10</strong><br><br>
+                    Le Critère de Kelly vous indique que la mise mathématiquement parfaite pour maximiser vos gains à long terme est de <strong>10%</strong> de votre Bankroll (soit 100 FC si vous possédez 1 000 FC).
+                </p>
+            </div>
+    
+            <h2 style="color: #fff; margin-top: 40px; margin-bottom: 15px; font-size: 1.5em;">3. Le "Fractional Kelly" : Réduire la Volatilité</h2>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 20px;">
+                Bien que la formule classique (Full Kelly) soit mathématiquement irréprochable pour optimiser la croissance, elle est réputée pour être extrêmement agressive en pratique. Une légère surestimation de vos probabilités de victoire peut entraîner des mises trop élevées et des fluctuations de bankroll violentes.
+            </p>
+            <p style="color: #cbd5e1; line-height: 1.8; margin-bottom: 25px;">
+                C'est pourquoi la quasi-totalité des analystes professionnels utilisent le <strong>Fractional Kelly</strong> (Kelly Fractionné). Cette méthode consiste à diviser le résultat obtenu par 2 (Half-Kelly) ou par 4 (Quarter-Kelly). Dans notre exemple précédent, au lieu de miser 10% de sa bankroll, un joueur prudent misera 5% (Half-Kelly) ou 2.5% (Quarter-Kelly). Cette approche sacrifie une infime partie de la croissance théorique maximale, mais divise le risque de faillite de manière drastique, assurant une sérénité essentielle face à la variance.
+            </p>
+        </article>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/legal.html">Mentions Légales & Confidentialité</a>
+                <a href="/contact.html">Contact</a>
+                <a href="/faq.html">FAQ</a>
+                <a href="/guides">Guides & Stratégies</a>
+            </div>
+            <div class="footer-copy">
+                <p>&copy; 2026 StakeLite. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
